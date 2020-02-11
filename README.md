@@ -1,7 +1,7 @@
 # monorail-external
-examples to run monorail externally
+This is for helping potential users of the monorail RNA-seq processing pipeline (alignment/quantification) get started running their own data through it.
 
-Caveat emptor: this is a work in process, not the final product.
+Caveat emptor: both the monorail pipeline itself and this repo are a work in process, not the final product.
 
 If you're reading this and decide to use the pipeline that's great, but you are beta testing it.
 
