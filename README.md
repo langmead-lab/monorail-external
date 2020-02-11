@@ -29,7 +29,7 @@ You need to have either docker or singularity running, I'm using singularity 2.6
 
 Significantly newer versions of Singularity may not work (e.g. 3.x and up).
 
-An example shell script is provided in `run_monorail_container.sh`.
+An example shell script is provided in `singularity/run_monorail_container.sh`.
 
 Both gzipped and uncompressed FASTQs are supported as well as paired/single ended runs.
 
@@ -57,6 +57,8 @@ will result in a Singularity image file in the current working directory:
 `recount-rs5-1.0.2.simg`
 
 NOTE: any host filesystem path mapped into a running container *must not* be a symbolic link, as the symlink will not be able to be followed within the container.
+
+Also, you will need to set the `$RECOUNT_HOST_REF` path in the script to where ever you download/build the relevant reference indexes (see below for more details).
 
 ### SRA
 
@@ -87,7 +89,7 @@ You will need to either download or pre-build the reference index files includin
 
 Reference indexes + annotations are already built/extracted for human (HG38, Gencode V26) and mouse (GRCM38, Gencode M23).
 
-For human HG38, `cd` into the path you will use for the `$RECOUNT_REF_HOST` path in the example runner script and then run this script from the root of this repo:
+For human HG38, `cd` into the path you will use for the `$RECOUNT_REF_HOST` path in the `singularity/run_monorail_container.sh` runner script and then run this script from the root of this repo:
 
 `get_human_ref_indexes.sh`
 
