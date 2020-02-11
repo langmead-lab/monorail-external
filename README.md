@@ -1,7 +1,7 @@
 # monorail-external
 examples to run monorail externally
 
-NOTE: any host filesystem path mapped into the container *must* not be a symbolic link, as the symlink will not be able to be followed within the container.
+NOTE: any host filesystem path mapped into the container *must not* be a symbolic link, as the symlink will not be able to be followed within the container.
 
 ## Requirements
 
@@ -34,7 +34,7 @@ Significantly newer versions of Singularity may not work (e.g. 3.x and up).
 
 An example shell script is provided in `run_monorail_container.sh`.
 
-Both gzipped and non-compressed FASTQs are supported as well as paired/single ended runs.
+Both gzipped and uncompressed FASTQs are supported as well as paired/single ended runs.
 
 We also support downloading from SRA and the GDC (TCGA), but those follow a different format.
 
@@ -44,14 +44,14 @@ You will need to either download or pre-build the reference index files includin
 
 It should have a subdirectory named exactly the same as the reference short name used in the input file (accessions.txt), in this case "hg38" (for human).
 
-The list of human indexes to populate this hg38 directory are here (these should be decompressed within the RECOUNT_REF/hg38/ directory):
+The list of human indexes to populate this hg38 directory are here (these should be decompressed within the `$RECOUNT_REF_HOST/hg38` directory):
 * https://recount-ref.s3.amazonaws.com/hg38/star_idx.tar.gz
 * https://recount-ref.s3.amazonaws.com/hg38/salmon_index.tar.gz
 * https://recount-ref.s3.amazonaws.com/hg38/unmapped_hisat2_idx.tar.gz
 * https://recount-ref.s3.amazonaws.com/hg38/gtf.tar.gz
 * https://recount-ref.s3.amazonaws.com/hg38/fasta.tar.gz
 
-This list for mouse are here, "grcm38":
+This list for mouse are here (these should be decompressed within the `$RECOUNT_REF_HOST/grcm38` directory):
 
 * https://recount-ref.s3.amazonaws.com/grcm38/star_idx.tar.gz
 * https://recount-ref.s3.amazonaws.com/grcm38/salmon_index.tar.gz
