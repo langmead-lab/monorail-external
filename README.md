@@ -47,8 +47,17 @@ Check the quay.io listing for up-to-date Monorail Docker images (which can be co
 
 https://quay.io/repository/benlangmead/recount-rs5?tab=tags
 
-As of 2020-02-11 verion rs5-1.0.2 is a stable release.
+As of 2020-02-11 version `1.0.2` is a stable release.
 
+### Conversion from Docker to Singularity
+
+We store versions of the monorail pipeline as Docker images in quay.io, however, they can easily be converted to Singularity images once downloaded locally:
+
+```singularity pull docker://quay.io/benlangmead/recount-rs5:1.0.2```
+
+will result in a Singularity image file in the current working directory:
+
+`recount-rs5-1.0.2.simg`
 
 ### SRA
 
