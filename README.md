@@ -1,6 +1,10 @@
 # monorail-external
 examples to run monorail externally
 
+Caveat emptor: this is a work in process, not the final product.
+
+If you're reading this and decide to use the pipeline you're essentially beta testing it.
+
 ## Requirements
 
 * Container platform (Docker or Singularity)
