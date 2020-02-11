@@ -45,16 +45,16 @@ All you need to provide is the run accession of the sequencing run you want to p
 Example:
 `/bin/bash -x run_monorail_container_local.sh SRR390728 SRP020237 10`
 
-This will startup a Singularity container, download the SRR390728 run accession (paired) from the study SRP020237 using upto 10 CPUs/cores.
+This will startup a container, download the SRR390728 run accession (paired) from the study SRP020237 using upto 10 CPUs/cores.
 
 ### Local
 
-All you need to provide is the run accession of the sequencing run you want to process via monorail:
+You will need to provide a label/ID for the dataset (in place of "my_local_run") and the path to at least one FASTQ file.
 
 Example:
 ```/bin/bash -x run_monorail_container_local.sh my_local_run local 20 /path/to/first_read_mates.fastq.gz /path/to/second_read_mates.fastq.gz```
 
-This will startup a Singularity container, attempt to hardlink the fastq filepaths into a temp directory and process them using upto 20 CPUs/cores.  The 2nd mates file path is optional as is the gzip compression (the pipeline uses the extension to figure out if gzip compression is being used or not).
+This will startup a container, attempt to hardlink the fastq filepaths into a temp directory and process them using upto 20 CPUs/cores.  The 2nd mates file path is optional as is the gzip compression (the pipeline uses the extension to figure out if gzip compression is being used or not).
 
 ## Getting Reference Indexes
 
