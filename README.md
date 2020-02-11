@@ -9,8 +9,22 @@ NOTE: any host filesystem path mapped into the container *must* not be a symboli
 * Pre-downloaded genome-of-choicee reference indexes (e.g. HG38 or GRCM38)
 * List of SRA accessions to process or locally accessible file paths
 * Computational resources (memory, CPU, disk space)
+
 You can specify the number of CPUs to use but the amount of memory used will be dictated by how large the STAR reference index is.
-For human it's 30 GBs.  The amount of disk space will be run dependent but typically varies from 10's of MBs to 100's of MBs per run accession.
+For human it's 30 GBs.  
+
+Multiple CPUs (cores/threads) are used by the following processes run within the pipeline:
+
+* STAR (uses all CPUs given)
+* Salmon (upto 8 CPUs given)
+* parallel-fastq-dump (upto 4 CPUs given)
+* bamcount (upto 4 CPUs given)
+
+
+Snakemake itself will parallelize the various steps in the pipeline if they can be run indepdendently and are not taking all the CPUs (e.g. not STAR, but other single CPU steps).
+
+
+The amount of disk space will be run dependent but typically varies from 10's of MBs to 100's of MBs per run accession.
 
 ## Overview
 
