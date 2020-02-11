@@ -1,8 +1,6 @@
 # monorail-external
 examples to run monorail externally
 
-NOTE: any host filesystem path mapped into the container *must not* be a symbolic link, as the symlink will not be able to be followed within the container.
-
 ## Requirements
 
 * Container platform (Docker or Singularity)
@@ -20,11 +18,10 @@ Multiple CPUs (cores/threads) are used by the following processes run within the
 * parallel-fastq-dump (upto 4 CPUs given)
 * bamcount (upto 4 CPUs given)
 
+Snakemake itself will parallelize the various steps in the pipeline if they can be run indepdendently and are not taking all the CPUs.
 
-Snakemake itself will parallelize the various steps in the pipeline if they can be run indepdendently and are not taking all the CPUs (e.g. not STAR, but other single CPU steps).
 
-
-The amount of disk space will be run dependent but typically varies from 10's of MBs to 100's of MBs per run accession.
+The amount of disk space will be run-dependent, but typically varies from 10's of MBs to 100's of MBs per run accession (for human/mouse).
 
 ## Overview
 
@@ -59,13 +56,15 @@ will result in a Singularity image file in the current working directory:
 
 `recount-rs5-1.0.2.simg`
 
+NOTE: any host filesystem path mapped into a running container *must not* be a symbolic link, as the symlink will not be able to be followed within the container.
+
 ### SRA
 
 All you need to provide is the run accession of the sequencing run you want to process via monorail:
 
 Example:
 
-`/bin/bash -x run_monorail_container_local.sh SRR390728 SRP020237 hg38 10`
+`/bin/bash run_monorail_container_local.sh SRR390728 SRP020237 hg38 10`
 
 This will startup a container, download the SRR390728 run accession (paired) from the study SRP020237 using upto 10 CPUs/cores.
 
@@ -75,9 +74,12 @@ You will need to provide a label/ID for the dataset (in place of "my_local_run")
 
 Example:
 
-```/bin/bash -x run_monorail_container_local.sh my_local_run local hg38 20 /path/to/first_read_mates.fastq.gz /path/to/second_read_mates.fastq.gz```
+```/bin/bash run_monorail_container_local.sh my_local_run local hg38 20 /path/to/first_read_mates.fastq.gz /path/to/second_read_mates.fastq.gz```
 
-This will startup a container, attempt to hardlink the fastq filepaths into a temp directory and process them using upto 20 CPUs/cores.  The 2nd mates file path is optional as is the gzip compression (the pipeline uses the extension to figure out if gzip compression is being used or not).
+This will startup a container, attempt to hardlink the fastq filepaths into a temp directory, and process them using up to 20 CPUs/cores.
+
+The 2nd mates file path is optional as is the gzip compression.
+The pipeline uses the `.gz` extension to figure out if gzip compression is being used or not.
 
 ## Getting Reference Indexes
 
