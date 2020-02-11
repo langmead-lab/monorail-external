@@ -4,8 +4,8 @@ examples to run monorail externally
 ## Requirements
 
 * Container platform (Docker or Singularity)
-* Pre-downloaded genome-of-choicee reference indexes (e.g. HG38 or GRCM38)
-* List of SRA accessions to process or locally accessible file paths
+* Pre-downloaded (or pre-built) genome-of-choice reference indexes (e.g. HG38 or GRCM38), see below for more details
+* List of SRA accessions to process or locally accessible file paths of runs to process
 * Computational resources (memory, CPU, disk space)
 
 You can specify the number of CPUs to use but the amount of memory used will be dictated by how large the STAR reference index is.
