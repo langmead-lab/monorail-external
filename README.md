@@ -38,6 +38,18 @@ Both gzipped and uncompressed FASTQs are supported as well as paired/single ende
 
 We also support downloading from SRA and local files.
 
+The example script assumes the monorail image is already downloaded/converted and is present in the working directory.
+e.g. `recount-rs5-1.0.2.simg`
+
+But this can be changed via the `SINGULARITY_MONORAIL_IMAGE` variable near the top of the example script.
+
+Check the quay.io listing for up-to-date Monorail Docker images (which can be converted into Singularity images):
+
+https://quay.io/repository/benlangmead/recount-rs5?tab=tags
+
+As of 2020-02-11 verion rs5-1.0.2 is a stable release.
+
+
 ### SRA
 
 All you need to provide is the run accession of the sequencing run you want to process via monorail:
