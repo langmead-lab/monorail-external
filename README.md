@@ -16,7 +16,9 @@ You need to have either docker or singularity running, I'm using singularity 2.6
 
 Significantly newer versions of Singularity may not work (e.g. 3.x and up).
 
-The following is provided in an example shell script (e.g. bash):
+The following the barebones set of commands for running the container within a shell script.
+
+An example shell script is provided in `run_monorail_container.sh`.
 
 ```###start of shell script
 #make sure singularity is available in the path
