@@ -1,4 +1,5 @@
 # monorail-external
+
 This is for helping potential users of the monorail RNA-seq processing pipeline (alignment/quantification) get started running their own data through it.
 
 Caveat emptor: both the monorail pipeline itself and this repo are a work in process, not the final product.
@@ -102,3 +103,9 @@ For human HG38, `cd` into the path you will use for the `$RECOUNT_REF_HOST` path
 Similarly for mouse GRCM38, do the same as above but run:
 
 `get_mouse_ref_indexes.sh`
+
+For the purpose of building your own reference indexes, the versions of the 3 tools that use them are:
+
+* STAR 2.7.3a
+* Salmon 0.12.0
+* HISAT2 2.1.0
