@@ -36,7 +36,25 @@ An example shell script is provided in `run_monorail_container.sh`.
 
 Both gzipped and uncompressed FASTQs are supported as well as paired/single ended runs.
 
-We also support downloading from SRA and the GDC (TCGA), but those follow a different format.
+We also support downloading from SRA and local files.
+
+### SRA
+
+All you need to provide is the run accession of the sequencing run you want to process via monorail:
+
+Example:
+`/bin/bash -x run_monorail_container_local.sh SRR390728 SRP020237 10`
+
+This will startup a Singularity container, download the SRR390728 run accession (paired) from the study SRP020237 using upto 10 CPUs/cores.
+
+### Local
+
+All you need to provide is the run accession of the sequencing run you want to process via monorail:
+
+Example:
+```/bin/bash -x run_monorail_container_local.sh my_local_run local 20 /path/to/first_read_mates.fastq.gz /path/to/second_read_mates.fastq.gz```
+
+This will startup a Singularity container, attempt to hardlink the fastq filepaths into a temp directory and process them using upto 20 CPUs/cores.  The 2nd mates file path is optional as is the gzip compression (the pipeline uses the extension to figure out if gzip compression is being used or not).
 
 ## Getting Reference Indexes
 
