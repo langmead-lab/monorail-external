@@ -65,7 +65,7 @@ All you need to provide is the run accession of the sequencing run you want to p
 
 Example:
 
-`/bin/bash -x run_monorail_container_local.sh SRR390728 SRP020237 10`
+`/bin/bash -x run_monorail_container_local.sh SRR390728 SRP020237 hg38 10`
 
 This will startup a container, download the SRR390728 run accession (paired) from the study SRP020237 using upto 10 CPUs/cores.
 
@@ -75,7 +75,7 @@ You will need to provide a label/ID for the dataset (in place of "my_local_run")
 
 Example:
 
-```/bin/bash -x run_monorail_container_local.sh my_local_run local 20 /path/to/first_read_mates.fastq.gz /path/to/second_read_mates.fastq.gz```
+```/bin/bash -x run_monorail_container_local.sh my_local_run local hg38 20 /path/to/first_read_mates.fastq.gz /path/to/second_read_mates.fastq.gz```
 
 This will startup a container, attempt to hardlink the fastq filepaths into a temp directory and process them using upto 20 CPUs/cores.  The 2nd mates file path is optional as is the gzip compression (the pipeline uses the extension to figure out if gzip compression is being used or not).
 
