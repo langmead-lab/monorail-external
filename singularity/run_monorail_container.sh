@@ -1,6 +1,8 @@
 #make sure singularity is loaded/in $PATH
 umask 0077
 
+SINGULARITY_MONORAIL_IMAGE=recount-rs5-1.0.2.simg
+
 #run accession (sra, e.g. SRR390728), or internal ID (local)
 run_acc=$1
 #"local" or the SRA study accession (e.g. SRP020237)
@@ -22,17 +24,16 @@ export RECOUNT_INPUT_HOST=input/${run_acc}_att0
 export RECOUNT_OUTPUT_HOST=output/${run_acc}_att0
 #RECOUNT_TEMP_HOST stores the initial download of sequence files, typically this should be on a fast filesystem as it's the most IO intensive from our experience (use either a performance oriented distributed FS like Lustre or GPFS, or a ramdisk).
 export RECOUNT_TEMP_HOST=temp/${run_acc}_att0
-#May need to change this to the proper full path to the downloaded/prebuilt reference indexes
-#this directry *contain* the reference named in the accession string below (e.g. "hg38" for human, "grcm38" for mouse)
-export RECOUNT_REF_HOST=ref
+#may need to change this to real path to the reference indexes (this directory should contain the ref_name passed in e.g. "hg38")
+export RECOUNT_REF_HOST=refs
 
 mkdir -p $RECOUNT_TEMP_HOST/input
 mkdir -p $RECOUNT_INPUT_HOST
 mkdir -p $RECOUNT_OUTPUT_HOST
 
 export RECOUNT_TEMP=/container-mounts/recount/temp 
+#expects at least $fp1 to be passed in
 if [[ $study == 'local' ]]; then
-    #expects at least $fp1 to be passed in
     ln $fp1 $RECOUNT_TEMP_HOST/input/
     fp_string="$RECOUNT_TEMP/input/$fp1"
     if [[ ! -z $fp2 ]]; then
@@ -43,7 +44,6 @@ if [[ $study == 'local' ]]; then
     #If you try to list multiple items in a single accessions.txt file you'll get a mixed run which will fail.
     echo -n "${run_acc},LOCAL_STUDY,${ref_name},local,$fp_string" > ${RECOUNT_INPUT_HOST}/accession.txt
 else
-    #SRA download version
     echo -n "${run_acc},${study},${ref_name},sra,${run_acc}" > ${RECOUNT_INPUT_HOST}/accession.txt
 fi
 
@@ -53,4 +53,4 @@ export RECOUNT_REF=/container-mounts/recount/ref
 
 export RECOUNT_CPUS=$num_cpus
 
-singularity exec -B $RECOUNT_REF_HOST:$RECOUNT_REF -B $RECOUNT_TEMP_HOST:$RECOUNT_TEMP -B $RECOUNT_INPUT_HOST:$RECOUNT_INPUT -B $RECOUNT_OUTPUT_HOST:$RECOUNT_OUTPUT recount-rs5-1.0.2.simg /bin/bash -x -c "source activate recount && /startup.sh && /workflow.bash"
+singularity exec -B $RECOUNT_REF_HOST:$RECOUNT_REF -B $RECOUNT_TEMP_HOST:$RECOUNT_TEMP -B $RECOUNT_INPUT_HOST:$RECOUNT_INPUT -B $RECOUNT_OUTPUT_HOST:$RECOUNT_OUTPUT $SINGULARITY_MONORAIL_IMAGE /bin/bash -x -c "source activate recount && /startup.sh && /workflow.bash"
