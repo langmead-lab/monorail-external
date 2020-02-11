@@ -3,7 +3,9 @@ examples to run monorail externally
 
 Caveat emptor: this is a work in process, not the final product.
 
-If you're reading this and decide to use the pipeline you're essentially beta testing it.
+If you're reading this and decide to use the pipeline that's great, but you are beta testing it.
+
+Please file issues here as you find them.
 
 ## Requirements
 
