@@ -85,19 +85,12 @@ The pipeline uses the `.gz` extension to figure out if gzip compression is being
 
 You will need to either download or pre-build the reference index files including the STAR, Salmon, the transcriptome, and HISAT2 indexes used in the monorail pipeline.
 
-It should have a subdirectory named exactly the same as the reference short name used in the input file (accessions.txt), in this case "hg38" (for human).
+Reference indexes + annotations are already built/extracted for human (HG38, Gencode V26) and mouse (GRCM38, Gencode M23).
 
-The list of human indexes to populate this hg38 directory are here (these should be decompressed within the `$RECOUNT_REF_HOST/hg38` directory):
-* https://recount-ref.s3.amazonaws.com/hg38/star_idx.tar.gz
-* https://recount-ref.s3.amazonaws.com/hg38/salmon_index.tar.gz
-* https://recount-ref.s3.amazonaws.com/hg38/unmapped_hisat2_idx.tar.gz
-* https://recount-ref.s3.amazonaws.com/hg38/gtf.tar.gz
-* https://recount-ref.s3.amazonaws.com/hg38/fasta.tar.gz
+For human HG38, `cd` into the path you will use for the `$RECOUNT_REF_HOST` path in the example runner script and then run this script from the root of this repo:
 
-This list for mouse are here (these should be decompressed within the `$RECOUNT_REF_HOST/grcm38` directory):
+`get_human_ref_indexes.sh`
 
-* https://recount-ref.s3.amazonaws.com/grcm38/star_idx.tar.gz
-* https://recount-ref.s3.amazonaws.com/grcm38/salmon_index.tar.gz
-* https://recount-ref.s3.amazonaws.com/grcm38/unmapped_hisat2_idx.tar.gz
-* https://recount-ref.s3.amazonaws.com/grcm38/gtf.tar.gz
-* https://recount-ref.s3.amazonaws.com/grcm38/fasta.tar.gz
+Similarly for mouse GRCM38, do the same as above but run:
+
+`get_mouse_ref_indexes.sh`
