@@ -28,7 +28,8 @@ if [[ ! -e ../${org}/fasta/genome.fa ]]; then
     tar -zxvf fasta.tar.gz
     popd
 fi
-ln -fs ../${org}/fasta/genome.fa recount_pump.fa
+#can't be symbolic since the container won't be able to follow it
+ln -f ../${org}/fasta/genome.fa recount_pump.fa
 
 #now get disjoint of annotated exons, which is also part of the recount-pump refs
 if [[ ! -e ../${org}/gtf/exons.bed ]]; then
