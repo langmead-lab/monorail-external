@@ -62,4 +62,4 @@ sample_id_manfest_fn=$(basename $SAMPLE_ID_MANIFEST_HOST)
 export SAMPLE_ID_MANIFEST=$WORKING_DIR/$sample_id_manfest_fn
 cp $SAMPLE_ID_MANIFEST_HOST $WORKING_DIR_HOST/$sample_id_manfest_fn
 
-singularity exec -B $INPUT_DIR_HOST:$INPUT_DIR -B $WORKING_DIR_HOST:$WORKING_DIR -B $REF_DIR_HOST:$REF_DIR $SINGULARITY_MONORAIL_IMAGE /bin/bash -x -c "source activate recount-unify && /recount-unify/workflow.bash"
+singularity exec -B $REF_DIR_HOST:$REF_DIR -B $INPUT_DIR_HOST:$INPUT_DIR -B $WORKING_DIR_HOST:$WORKING_DIR -B $REF_DIR_HOST:$REF_DIR $SINGULARITY_MONORAIL_IMAGE /bin/bash -x -c "source activate recount-unify && /recount-unify/workflow.bash"
