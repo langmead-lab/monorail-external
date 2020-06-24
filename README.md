@@ -34,7 +34,7 @@ The amount of disk space will be run-dependent, but typically varies from 10's o
 
 You need to have either docker or singularity running, I'm using singularity 2.6.0 here because it's what we have been running.
 
-Significantly newer versions of Singularity may not work (e.g. 3.x and up).
+Significantly versions 3.x and up will probably work, but I haven't tested them.
 
 An example shell script is provided in `singularity/run_monorail_container.sh`.
 
@@ -86,6 +86,8 @@ Example:
 ```/bin/bash run_monorail_container_local.sh my_local_run local hg38 20 /path/to/first_read_mates.fastq.gz /path/to/second_read_mates.fastq.gz```
 
 This will startup a container, attempt to hardlink the fastq filepaths into a temp directory, and process them using up to 20 CPUs/cores.
+
+Important: the script assumes that the input fastq files reside on the same filesystem as where the working directory is, this is required for the container to be able to access the files as the script *hardlinks* them for access by the container (the container can't follow symlinks).
 
 The 2nd mates file path is optional as is the gzip compression.
 The pipeline uses the `.gz` extension to figure out if gzip compression is being used or not.
