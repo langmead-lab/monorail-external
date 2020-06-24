@@ -1,20 +1,22 @@
 #make sure singularity is loaded/in $PATH
 umask 0077
 
-SINGULARITY_MONORAIL_IMAGE=recount-rs5-1.0.2.simg
+#e.g. recount-rs5-1.0.2.simg or recount-rs5-1.0.2.sif
+singularity_image_file=$1
 
-#run accession (sra, e.g. SRR390728), or internal ID (local)
-run_acc=$1
-#"local" or the SRA study accession (e.g. SRP020237)
-study=$2
+#run accession (sra, e.g. SRR390728), or internal ID (local), 
+#this can be anything as long as its consistently used to identify the particular sample
+run_acc=$2
+#"local" or the SRA study accession (e.g. SRP020237) if downloading from SRA
+study=$3
 #"hg38" (human) or "grcm38" (mouse)
-ref_name=$3
+ref_name=$4
 #number of processes to start within container, 4-16 are reasonable depending on the system/run
-num_cpus=$4
+num_cpus=$5
 #full file path to first read mates (optional)
-fp1=$5
+fp1=$6
 #full file path to second read mates (optional)
-fp2=$6
+fp2=$7
 
 export RECOUNT_JOB_ID=${run_acc}_in0_att0
 
@@ -34,6 +36,9 @@ mkdir -p $RECOUNT_OUTPUT_HOST
 export RECOUNT_TEMP=/container-mounts/recount/temp 
 #expects at least $fp1 to be passed in
 if [[ $study == 'local' ]]; then
+    #hard link the input FASTQ(s) into input directory
+    #THIS ASSUMES input files are *on the same filesystem* as the input directory!
+    #this is required for accessing the files in the container
     ln $fp1 $RECOUNT_TEMP_HOST/input/
     fp_string="$RECOUNT_TEMP/input/$fp1"
     if [[ ! -z $fp2 ]]; then
@@ -53,4 +58,4 @@ export RECOUNT_REF=/container-mounts/recount/ref
 
 export RECOUNT_CPUS=$num_cpus
 
-singularity exec -B $RECOUNT_REF_HOST:$RECOUNT_REF -B $RECOUNT_TEMP_HOST:$RECOUNT_TEMP -B $RECOUNT_INPUT_HOST:$RECOUNT_INPUT -B $RECOUNT_OUTPUT_HOST:$RECOUNT_OUTPUT $SINGULARITY_MONORAIL_IMAGE /bin/bash -x -c "source activate recount && /startup.sh && /workflow.bash"
+singularity exec -B $RECOUNT_REF_HOST:$RECOUNT_REF -B $RECOUNT_TEMP_HOST:$RECOUNT_TEMP -B $RECOUNT_INPUT_HOST:$RECOUNT_INPUT -B $RECOUNT_OUTPUT_HOST:$RECOUNT_OUTPUT $singularity_image_file /bin/bash -x -c "source activate recount && /startup.sh && /workflow.bash"
