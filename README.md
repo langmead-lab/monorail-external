@@ -34,7 +34,7 @@ The amount of disk space will be run-dependent, but typically varies from 10's o
 
 You need to have either docker or singularity running, I'm using singularity 2.6.0 here because it's what we have been running.
 
-Significantly versions 3.x and up will probably work, but I haven't tested them.
+Singularity versions 3.x and up will probably work, but I haven't tested them.
 
 An example shell script is provided in `singularity/run_monorail_container.sh`.
 
