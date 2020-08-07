@@ -43,10 +43,12 @@ if [[ $study == 'local' ]]; then
     #THIS ASSUMES input files are *on the same filesystem* as the input directory!
     #this is required for accessing the files in the container
     ln $fp1 $RECOUNT_TEMP_HOST/input/
-    fp_string="$RECOUNT_TEMP/input/$fp1"
+    fp1_fn=$(basename $fp1)
+    fp_string="$RECOUNT_TEMP/input/$fp1_fn"
     if [[ ! -z $fp2 ]]; then
         ln $fp2 $RECOUNT_TEMP_HOST/input/
-        fp_string="$RECOUNT_TEMP/input/$fp1;$RECOUNT_TEMP/input/$fp2"
+        fp2_fn=$(basename $fp2)
+        fp_string="$RECOUNT_TEMP/input/$fp2_fn;$RECOUNT_TEMP/input/$fp2_fn"
     fi
     #only one run accession per run of this file
     #If you try to list multiple items in a single accessions.txt file you'll get a mixed run which will fail.
