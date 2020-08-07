@@ -17,6 +17,9 @@ num_cpus=$5
 fp1=$6
 #full file path to second read mates (optional)
 fp2=$7
+#full path to location of downloaded refs
+#this directory should contain either "hg38" or "grcm38" subdirectories (or both)
+ref_path=$8
 
 export RECOUNT_JOB_ID=${run_acc}_in0_att0
 
@@ -27,7 +30,7 @@ export RECOUNT_OUTPUT_HOST=output/${run_acc}_att0
 #RECOUNT_TEMP_HOST stores the initial download of sequence files, typically this should be on a fast filesystem as it's the most IO intensive from our experience (use either a performance oriented distributed FS like Lustre or GPFS, or a ramdisk).
 export RECOUNT_TEMP_HOST=temp/${run_acc}_att0
 #may need to change this to real path to the reference indexes (this directory should contain the ref_name passed in e.g. "hg38")
-export RECOUNT_REF_HOST=refs
+export RECOUNT_REF_HOST=$ref_path
 
 mkdir -p $RECOUNT_TEMP_HOST/input
 mkdir -p $RECOUNT_INPUT_HOST
