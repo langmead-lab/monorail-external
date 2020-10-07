@@ -111,3 +111,25 @@ For the purpose of building your own reference indexes, the versions of the 3 to
 * STAR 2.7.3a
 * Salmon 0.12.0
 * HISAT2 2.1.0
+
+## Layout of links to recount-pump output for recount-unifier
+
+Due to the importance of this part, this get its own section.
+
+The `scripts/find_done.sh` script that gets run automatically in the `recount-unifier` container *should* organize the symlinks to the original, recount-pump output directories correctly, however, it's worth checking given that the rest of the Unifier is critically sensitive to how the links are organized.
+
+For example, if you find that you're getting blanks instead of actual integers in the `all.exon_bw_count.pasted.gz` file, it's likely a sign that the input directory hierarchy was not laid out correctly.
+
+Assuming your top level directory for input is called `links`, the expected directory hierarchy for each sequencing run/sample is:
+
+`links/study_loworder/study/run_loworder/run/symlink_to_recount-pump_attempt_directory_for_this_run`
+
+e.g.:
+
+`links/94/SRP019994/83/SRR797083/sra_human_v3_41_in26354_att2`
+
+where `sra_human_v3_41_in26354_att2` is the symlink to the actual recount-pump generated attempt director for run `SRR797083` in study `SRP019994`.
+
+`study_loworder` and `run_loworder` are *always* the last 2 characters of the study and run accessions/IDs respectively.
+
+Your study and run accessions/IDs may be very different the SRA example here, but they should still work in this setup.  However, single letter studies/runs probably won't.
