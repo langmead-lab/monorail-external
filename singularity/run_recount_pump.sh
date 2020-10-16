@@ -1,5 +1,6 @@
 #make sure singularity is loaded/in $PATH
 umask 0077
+export PERL5LIB=
 
 #e.g. recount-rs5-1.0.2.simg or recount-rs5-1.0.2.sif
 singularity_image_file=$1
@@ -13,13 +14,14 @@ study=$3
 ref_name=$4
 #number of processes to start within container, 4-16 are reasonable depending on the system/run
 num_cpus=$5
-#full file path to first read mates (optional)
-fp1=$6
-#full file path to second read mates (optional)
-fp2=$7
 #full path to location of downloaded refs
 #this directory should contain either "hg38" or "grcm38" subdirectories (or both)
-ref_path=$8
+ref_path=$6
+
+#full file path to first read mates (optional)
+fp1=$7
+#full file path to second read mates (optional)
+fp2=$8
 
 export RECOUNT_JOB_ID=${run_acc}_in0_att0
 
@@ -63,4 +65,8 @@ export RECOUNT_REF=/container-mounts/recount/ref
 
 export RECOUNT_CPUS=$num_cpus
 
-singularity exec -B $RECOUNT_REF_HOST:$RECOUNT_REF -B $RECOUNT_TEMP_HOST:$RECOUNT_TEMP -B $RECOUNT_INPUT_HOST:$RECOUNT_INPUT -B $RECOUNT_OUTPUT_HOST:$RECOUNT_OUTPUT $singularity_image_file /bin/bash -x -c "source activate recount && /startup.sh && /workflow.bash"
+export RECOUNT_TEMP_BIG_HOST=/dev/shm/temp_big/${run_acc}_att0
+mkdir -p $RECOUNT_TEMP_BIG_HOST
+export RECOUNT_TEMP_BIG=/container-mounts/recount/temp_big
+
+singularity exec -B $RECOUNT_REF_HOST:$RECOUNT_REF -B $RECOUNT_TEMP_BIG_HOST:$RECOUNT_TEMP_BIG -B $RECOUNT_TEMP_HOST:$RECOUNT_TEMP -B $RECOUNT_INPUT_HOST:$RECOUNT_INPUT -B $RECOUNT_OUTPUT_HOST:$RECOUNT_OUTPUT $singularity_image_file /bin/bash -x -c "source activate recount && /startup.sh && /workflow.bash"
