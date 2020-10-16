@@ -34,7 +34,7 @@ export REF_DIR=/container-mounts/ref
 
 #human
 if [[ $REF == 'hg38' ]]; then
-    export LIST_OF_ANNOTATIONS='G026,G029,R109,ERCC,SIRV,F006'
+    export LIST_OF_ANNOTATIONS='G026,G029,R109,F006,ERCC,SIRV'
 #mouse
 else 
     if [[ $REF == 'grcm38' ]]; then
@@ -54,6 +54,8 @@ export GENE_REJOIN_MAPPING=$REF_DIR/disjoint2exons2genes.bed
 export GENE_ANNOTATION_MAPPING=$REF_DIR/disjoint2exons2genes.rejoin_genes.bed
 export REF_FASTA=$REF_DIR/recount_pump.fa
 export REF_SIZES=$REF_DIR/recount_pump.chr_sizes.tsv
+export EXON_BITMASKS=$REF_DIR/exon_bitmasks.tsv
+export EXON_BITMASK_COORDS=$REF_DIR/exon_bitmask_coords.tsv
 
 export INPUT_DIR=/container-mounts/input
 export WORKING_DIR=/container-mounts/working
