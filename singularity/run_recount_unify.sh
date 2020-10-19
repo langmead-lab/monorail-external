@@ -24,8 +24,12 @@ SAMPLE_ID_MANIFEST_HOST=$6
 #number of processes to start within container, 10-40 are reasonable depending on the system/run
 NUM_CPUS=$7
 
+#only used if you explicitly want recount-unify to build multiple studies
+#this is usually true only for specific cases (e.g. recount)
+MULTIPLE_STUDIES=$8
+
 #optional, this is used as the compilation_id in the jx output, defaults to 0
-export PROJECT_ID=$8
+export PROJECT_ID=$9
 
 mkdir -p $WORKING_DIR_HOST
 
@@ -62,6 +66,8 @@ export WORKING_DIR=/container-mounts/working
 export REF_DIR=/container-mounts/ref
 
 export RECOUNT_CPUS=$NUM_CPUS
+
+export MULTI_STUDY=$MULTIPLE_STUDIES
 
 sample_id_manfest_fn=$(basename $SAMPLE_ID_MANIFEST_HOST)
 export SAMPLE_ID_MANIFEST=$WORKING_DIR/$sample_id_manfest_fn

@@ -11,8 +11,11 @@ pushd ${org}_unify
 #as well as a stand in file with 0's for those samples w/o any exon sums (blank_exon_sums)
 #finally get the chromosome sizes for the genome reference used in recount-pump
 for f in disjoint2exons.bed.gz disjoint2exons2genes.bed.gz disjoint2exons2genes.rejoin_genes.bed.gz recount_pump.chr_sizes.tsv.gz blank_exon_sums.gz exon_bitmasks.tsv.gz exon_bitmask_coords.tsv.gz; do
-    wget https://recount-ref.s3.amazonaws.com/${org}_unify/$f
-    gunzip $f
+    unzipped=$(echo $f | sed 's/\.gz$//')
+    if [[ ! -e "$unzipped" ]]; then
+        wget https://recount-ref.s3.amazonaws.com/${org}_unify/$f
+        gunzip $f
+    fi
 done
 
 #next get list of annotated jx's which is separate the main annotations used in recount-pump
