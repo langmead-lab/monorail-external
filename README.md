@@ -51,17 +51,17 @@ Check the quay.io listing for up-to-date Monorail Docker images (which can be co
 
 https://quay.io/repository/benlangmead/recount-rs5?tab=tags
 
-As of 2020-02-11 version `1.0.2` is a stable release.
+As of 2020-02-11 version `1.0.4` is a stable release.
 
 ### Conversion from Docker to Singularity
 
 We store versions of the monorail pipeline as Docker images in quay.io, however, they can easily be converted to Singularity images once downloaded locally:
 
-```singularity pull docker://quay.io/benlangmead/recount-rs5:1.0.2```
+```singularity pull docker://quay.io/benlangmead/recount-rs5:1.0.4```
 
 will result in a Singularity image file in the current working directory:
 
-`recount-rs5-1.0.2.simg`
+`recount-rs5-1.0.4.simg`
 
 NOTE: any host filesystem path mapped into a running container *must not* be a symbolic link, as the symlink will not be able to be followed within the container.
 
@@ -73,7 +73,10 @@ All you need to provide is the run accession of the sequencing run you want to p
 
 Example:
 
-`/bin/bash run_monorail_container_local.sh SRR390728 SRP020237 hg38 10`
+`/bin/bash run_recount_pump.sh SRR390728 SRP020237 hg38 10 /path/to/references`
+
+The `/path/to/references` is the full path to whereever the appropriate reference getter script put them.
+Note: this path should not include the final subdirectory named for the reference version e.g. `hg38` or `grcm38`.
 
 This will startup a container, download the SRR390728 run accession (paired) from the study SRP020237 using upto 10 CPUs/cores.
 
@@ -83,7 +86,12 @@ You will need to provide a label/ID for the dataset (in place of "my_local_run")
 
 Example:
 
-```/bin/bash run_monorail_container_local.sh my_local_run local hg38 20 /path/to/first_read_mates.fastq.gz /path/to/second_read_mates.fastq.gz```
+Download the following two, tiny FASTQ files:
+
+http://snaptron.cs.jhu.edu/data/temp/SRR390728_125_1.fastq.gz
+http://snaptron.cs.jhu.edu/data/temp/SRR390728_125_2.fastq.gz
+
+```/bin/bash run_recount_pump.sh SRR390728 local hg38 20 /path/to/SRR390728_125_1.fastq.gz /path/to/SRR390728_125_2.fastq.gz```
 
 This will startup a container, attempt to hardlink the fastq filepaths into a temp directory, and process them using up to 20 CPUs/cores.
 
@@ -111,6 +119,8 @@ For the purpose of building your own reference indexes, the versions of the 3 to
 * STAR 2.7.3a
 * Salmon 0.12.0
 * HISAT2 2.1.0
+
+For the unifier, run the `get_unify_refs.sh` script with either `hg38` or `grcm38` as the one argument.
 
 ## Layout of links to recount-pump output for recount-unifier
 
