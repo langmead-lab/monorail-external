@@ -117,11 +117,40 @@ This will keep the first pass alignment BAM, the original FASTQ files, and will 
 
 ## Unifier (aggregation over per-sample pump outputs)
 
+The unifier aggregates the following cross sample outputs:
+
+* gene sums
+* exon sums
+* junction split read counts
+
+The first 2 are run together and then the junctions are aggregated.
+
+
+
 https://quay.io/repository/broadsword/recount-unify?tab=tags
 
 `1.0.1` is a stable version
 
+Follow the same process as for recount-pump (above) to convert to singularity.
+
+
 ```/bin/bash run_recount_unify.sh /path/to/recount-unifier-singularity.simg <reference_version> /path/to/unifier_reference /path/to/working/directory /path/to/pump/output /path/to/sample_id_list.tsv <number_cores>```
+
+recount3 compatible sums/counts matrix output directories are in the `/path/to/working/directory` under:
+
+* `gene_sums_per_study`
+* `exon_sums_per_study`
+* `junction_counts_per_study`
+
+Additionally, the unifier creates the junction backing indexes for Snaptron:
+
+* `junctions.bgz`
+* `junctions.bgz.tbi`
+* `junctions.sqlite`
+
+`rail_id`s are also created for every sample_id submitted in the `/path/to/sample_id_list.tsv` file and stored in:
+
+`ids.tsv`
 
 You can skip either the gene/exon sums aggregation or the junction counts aggregation if you only want to run or the other:
 
