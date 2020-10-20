@@ -117,6 +117,10 @@ This will keep the first pass alignment BAM, the original FASTQ files, and will 
 
 ## Unifier (aggregation over per-sample pump outputs)
 
+https://quay.io/repository/broadsword/recount-unify?tab=tags
+
+`1.0.1` is a stable version
+
 ```/bin/bash run_recount_unify.sh /path/to/recount-unifier-singularity.simg <reference_version> /path/to/unifier_reference /path/to/working/directory /path/to/pump/output /path/to/sample_id_list.tsv <number_cores>```
 
 You can skip either the gene/exon sums aggregation or the junction counts aggregation if you only want to run or the other:
