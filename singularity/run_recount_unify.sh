@@ -9,7 +9,7 @@ singularity_image_file=$1
 #hg38 or grcm38
 REF=$2
 
-#full path on host to where get_human_unify_REFs.sh deposited it's files
+#full path on host to one direcotry above where get_unify_refs.sh deposited its files
 REF_DIR_HOST=$3
 
 #full path on host to where we should actually run the unifier
@@ -35,6 +35,8 @@ mkdir -p $WORKING_DIR_HOST
 
 #inside container mount for REF files
 export REF_DIR=/container-mounts/ref
+
+REF_DIR_HOST=$REF_DIR_HOST/$REF"_unify"
 
 #human
 if [[ $REF == 'hg38' ]]; then
