@@ -30,7 +30,7 @@ Snakemake itself will parallelize the various steps in the pipeline if they can 
 
 The amount of disk space will be run-dependent, but typically varies from 10's of MBs to 100's of MBs per run accession (for human/mouse).
 
-## Overview
+## Pump (per-sample alignment stage)
 
 You need to have either docker or singularity running, I'm using singularity 2.6.0 here because it's what we have been running.
 
@@ -92,7 +92,7 @@ http://snaptron.cs.jhu.edu/data/temp/SRR390728_125_1.fastq.gz
 
 http://snaptron.cs.jhu.edu/data/temp/SRR390728_125_2.fastq.gz
 
-```/bin/bash run_recount_pump.sh /path/to/recount-pump-singularity.simg SRR390728 local hg38 20 /path/to/SRR390728_125_1.fastq.gz /path/to/SRR390728_125_2.fastq.gz```
+```/bin/bash run_recount_pump.sh /path/to/recount-pump-singularity.simg SRR390728 local hg38 20 /path/to/pump_reference /path/to/SRR390728_125_1.fastq.gz /path/to/SRR390728_125_2.fastq.gz```
 
 This will startup a container, attempt to hardlink the fastq filepaths into a temp directory, and process them using up to 20 CPUs/cores.
 
@@ -115,29 +115,19 @@ An example with all three options using the test local example:
 
 This will keep the first pass alignment BAM, the original FASTQ files, and will force STAR to be run in NoSharedMemory mode with respect to it's genome index for the first pass alignment.
 
-## Getting Reference Indexes
+## Unifier (aggregation over per-sample pump outputs)
 
-You will need to either download or pre-build the reference index files including the STAR, Salmon, the transcriptome, and HISAT2 indexes used in the monorail pipeline.
+```/bin/bash run_recount_unify.sh /path/to/recount-unifier-singularity.simg <reference_version> /path/to/unifier_reference /path/to/working/directory /path/to/pump/output /path/to/sample_id_list.tsv <number_cores>```
 
-Reference indexes + annotations are already built/extracted for human (HG38, Gencode V26) and mouse (GRCM38, Gencode M23).
+You can skip either the gene/exon sums aggregation or the junction counts aggregation if you only want to run or the other:
 
-For human HG38, `cd` into the path you will use for the `$RECOUNT_REF_HOST` path in the `singularity/run_monorail_container.sh` runner script and then run this script from the root of this repo:
+```export SKIP_SUMS=1 && ...```
 
-`get_human_ref_indexes.sh`
+or
 
-Similarly for mouse GRCM38, do the same as above but run:
+```export SKIP_JUNCTIONS=1 && ...```
 
-`get_mouse_ref_indexes.sh`
-
-For the purpose of building your own reference indexes, the versions of the 3 tools that use them are:
-
-* STAR 2.7.3a
-* Salmon 0.12.0
-* HISAT2 2.1.0
-
-For the unifier, run the `get_unify_refs.sh` script with either `hg38` or `grcm38` as the one argument.
-
-## Layout of links to recount-pump output for recount-unifier
+### Layout of links to recount-pump output for recount-unifier
 
 Due to the importance of this part, this get its own section.
 
@@ -158,3 +148,26 @@ where `sra_human_v3_41_in26354_att2` is the symlink to the actual recount-pump g
 `study_loworder` and `run_loworder` are *always* the last 2 characters of the study and run accessions/IDs respectively.
 
 Your study and run accessions/IDs may be very different the SRA example here, but they should still work in this setup.  However, single letter studies/runs probably won't.
+
+
+## Getting Reference Indexes
+
+You will need to either download or pre-build the reference index files including the STAR, Salmon, the transcriptome, and HISAT2 indexes used in the monorail pipeline.
+
+Reference indexes + annotations are already built/extracted for human (HG38, Gencode V26) and mouse (GRCM38, Gencode M23).
+
+For human HG38, `cd` into the path you will use for the `$RECOUNT_REF_HOST` path in the `singularity/run_recount_pump.sh` runner script and then run this script from the root of this repo:
+
+`get_human_ref_indexes.sh`
+
+Similarly for mouse GRCM38, do the same as above but run:
+
+`get_mouse_ref_indexes.sh`
+
+For the purpose of building your own reference indexes, the versions of the 3 tools that use them are:
+
+* STAR 2.7.3a
+* Salmon 0.12.0
+* HISAT2 2.1.0
+
+For the unifier, run the `get_unify_refs.sh` script with either `hg38` or `grcm38` as the one argument.
