@@ -43,7 +43,7 @@ Both gzipped and uncompressed FASTQs are supported as well as paired/single ende
 We also support downloading from SRA and local files.
 
 The example script assumes the monorail image is already downloaded/converted and is present in the working directory.
-e.g. `recount-rs5-1.0.2.simg`
+e.g. `recount-rs5-1.0.6.simg`
 
 But this can be changed via the `SINGULARITY_MONORAIL_IMAGE` variable near the top of the example script.
 
@@ -51,17 +51,17 @@ Check the quay.io listing for up-to-date Monorail Docker images (which can be co
 
 https://quay.io/repository/benlangmead/recount-rs5?tab=tags
 
-As of 2020-02-11 version `1.0.4` is a stable release.
+As of 2020-10-20 version `1.0.6` is a stable release.
 
 ### Conversion from Docker to Singularity
 
 We store versions of the monorail pipeline as Docker images in quay.io, however, they can easily be converted to Singularity images once downloaded locally:
 
-```singularity pull docker://quay.io/benlangmead/recount-rs5:1.0.4```
+```singularity pull docker://quay.io/benlangmead/recount-rs5:1.0.6```
 
 will result in a Singularity image file in the current working directory:
 
-`recount-rs5-1.0.4.simg`
+`recount-rs5-1.0.6.simg`
 
 NOTE: any host filesystem path mapped into a running container *must not* be a symbolic link, as the symlink will not be able to be followed within the container.
 
@@ -73,7 +73,7 @@ All you need to provide is the run accession of the sequencing run you want to p
 
 Example:
 
-`/bin/bash run_recount_pump.sh SRR390728 SRP020237 hg38 10 /path/to/references`
+`/bin/bash run_recount_pump.sh /path/to/recount-pump-singularity.simg SRR390728 SRP020237 hg38 10 /path/to/references`
 
 The `/path/to/references` is the full path to whereever the appropriate reference getter script put them.
 Note: this path should not include the final subdirectory named for the reference version e.g. `hg38` or `grcm38`.
@@ -89,9 +89,10 @@ Example:
 Download the following two, tiny FASTQ files:
 
 http://snaptron.cs.jhu.edu/data/temp/SRR390728_125_1.fastq.gz
+
 http://snaptron.cs.jhu.edu/data/temp/SRR390728_125_2.fastq.gz
 
-```/bin/bash run_recount_pump.sh SRR390728 local hg38 20 /path/to/SRR390728_125_1.fastq.gz /path/to/SRR390728_125_2.fastq.gz```
+```/bin/bash run_recount_pump.sh /path/to/recount-pump-singularity.simg SRR390728 local hg38 20 /path/to/SRR390728_125_1.fastq.gz /path/to/SRR390728_125_2.fastq.gz```
 
 This will startup a container, attempt to hardlink the fastq filepaths into a temp directory, and process them using up to 20 CPUs/cores.
 
@@ -99,6 +100,20 @@ Important: the script assumes that the input fastq files reside on the same file
 
 The 2nd mates file path is optional as is the gzip compression.
 The pipeline uses the `.gz` extension to figure out if gzip compression is being used or not.
+
+### Additional Options
+
+As of 1.0.5 there is some support for altering how the workflow is run with the following environment variables:
+
+* KEEP_BAM=1
+* KEEP_FASTQ=1
+* NO_SHARED_MEM=1
+
+An example with all three options using the test local example:
+
+```export KEEP_BAM=1 && export KEEP_FASTQ=1 && export NO_SHARED_MEM=1 && /bin/bash run_recount_pump.sh /path/to/recount-pump-singularity.simg SRR390728 local hg38 20 /path/to/SRR390728_125_1.fastq.gz /path/to/SRR390728_125_2.fastq.gz```
+
+This will keep the first pass alignment BAM, the original FASTQ files, and will force STAR to be run in NoSharedMemory mode with respect to it's genome index for the first pass alignment.
 
 ## Getting Reference Indexes
 
