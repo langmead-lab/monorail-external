@@ -1,22 +1,31 @@
 # monorail-external
 
-This is for helping potential users of the monorail RNA-seq processing pipeline (alignment/quantification) get started running their own data through it.
+This is for helping potential users of the Monorail RNA-seq processing pipeline (alignment/quantification) get started running their own data through it.
 
-Caveat emptor: both the monorail pipeline itself and this repo are a work in process, not the final product.
+Caveat emptor: both the Monorail pipeline itself and this repo are a work in process, not the final product.
 
 If you're reading this and decide to use the pipeline that's great, but you are beta testing it.
 
 Please file issues here as you find them.
 
+Monorail is split into 2 parts:
+
+* recount-pump
+* recount-unify
+
+`recount` comes from the fact that Monorail is the way that the data in `recount3+` is refreshed.
+
+However, Monorail also creates data for https://github.com/ChristopherWilks/snaptron
+
 ## Requirements
 
-* Container platform (Docker or Singularity)
-* Pre-downloaded (or pre-built) genome-of-choice reference indexes (e.g. HG38 or GRCM38), see below for more details
+* Container platform (Singularity)
+* Pre-downloaded (or pre-built) genome-of-choice reference indexes (e.g. HG38 or GRCM38), see next section of the README for more details
 * List of SRA accessions to process or locally accessible file paths of runs to process
 * Computational resources (memory, CPU, disk space)
 
 You can specify the number of CPUs to use but the amount of memory used will be dictated by how large the STAR reference index is.
-For human it's 30 GBs.  
+For human it's *30 GBs of useable RAM*.  
 
 Multiple CPUs (cores/threads) are used by the following processes run within the pipeline:
 
@@ -27,25 +36,45 @@ Multiple CPUs (cores/threads) are used by the following processes run within the
 
 Snakemake itself will parallelize the various steps in the pipeline if they can be run indepdendently and are not taking all the CPUs.
 
+The amount of disk space will be run-dependent, but typically varies from 10's of MBs to 100's of MBs per *run accession* (for human/mouse).
 
-The amount of disk space will be run-dependent, but typically varies from 10's of MBs to 100's of MBs per run accession (for human/mouse).
+## Getting Reference Indexes
+
+You will need to either download or pre-build the reference index files including the STAR, Salmon, the transcriptome, and HISAT2 indexes used in the Monorail pipeline.
+
+Reference indexes + annotations are already built/extracted for human (HG38, Gencode V26) and mouse (GRCM38, Gencode M23).
+
+For human hg38, `cd` into the path you will use for the `$RECOUNT_REF_HOST` path in the `singularity/run_recount_pump.sh` runner script and then run this script from the root of this repo:
+
+`get_human_ref_indexes.sh`
+
+Similarly for mouse GRCM38, do the same as above but run:
+
+`get_mouse_ref_indexes.sh`
+
+For the purpose of building your own reference indexes, the versions of the 3 tools that use them in recount-pump are:
+
+* STAR 2.7.3a
+* Salmon 0.12.0
+* HISAT2 2.1.0
+
+For the unifier, run the `get_unify_refs.sh` script with either `hg38` or `grcm38` as the one argument.
 
 ## Pump (per-sample alignment stage)
 
-You need to have either docker or singularity running, I'm using singularity 2.6.0 here because it's what we have been running.
+You need to have Singularity running, I'll be using singularity 2.6.0 here because it's what we have been running.
 
-Singularity versions 3.x and up will probably work, but I haven't tested them.
+Singularity versions 3.x and up will probably work, but I haven't tested them extensively.
 
-An example shell script is provided in `singularity/run_monorail_container.sh`.
+We 2 modes of input: 
 
-Both gzipped and uncompressed FASTQs are supported as well as paired/single ended runs.
+* downloading a sequence run from SRA
+* local FASTQ files
 
-We also support downloading from SRA and local files.
+For local runs, both gzipped and uncompressed FASTQs are supported as well as paired/single ended runs.
 
-The example script assumes the monorail image is already downloaded/converted and is present in the working directory.
+The example script below assumes the recount-pump Singularity image is already downloaded/converted and is present in the working directory.
 e.g. `recount-rs5-1.0.6.simg`
-
-But this can be changed via the `SINGULARITY_MONORAIL_IMAGE` variable near the top of the example script.
 
 Check the quay.io listing for up-to-date Monorail Docker images (which can be converted into Singularity images):
 
@@ -67,7 +96,7 @@ NOTE: any host filesystem path mapped into a running container *must not* be a s
 
 Also, you will need to set the `$RECOUNT_HOST_REF` path in the script to where ever you download/build the relevant reference indexes (see below for more details).
 
-### SRA
+### SRA input
 
 All you need to provide is the run accession of the sequencing run you want to process via monorail:
 
@@ -80,7 +109,7 @@ Note: this path should not include the final subdirectory named for the referenc
 
 This will startup a container, download the SRR390728 run accession (paired) from the study SRP020237 using upto 10 CPUs/cores.
 
-### Local
+### Local input
 
 You will need to provide a label/ID for the dataset (in place of "my_local_run") and the path to at least one FASTQ file.
 
@@ -125,10 +154,9 @@ The unifier aggregates the following cross sample outputs:
 
 The first 2 are run together and then the junctions are aggregated.
 
-
 https://quay.io/repository/broadsword/recount-unify?tab=tags
 
-`1.0.1` is a stable version
+`1.0.1` is a stable version as of 2020-10-21
 
 Follow the same process as for recount-pump (above) to convert to singularity.
 
@@ -137,7 +165,7 @@ Follow the same process as for recount-pump (above) to convert to singularity.
 
 `/path/to/references` here may be the same path as used in recount-pump, but it must contain an additional directory: `<reference_version>_unify`.
 
-Where `reference_version` is either `hg38` or `grcm38`.
+where `reference_version` is either `hg38` or `grcm38`.
 
 `/path/to/sample_id_list.tsv` is a tab delimited list of `<study>TAB<sample_id>` lines.
 
@@ -149,7 +177,7 @@ recount3 compatible sums/counts matrix output directories are in the `/path/to/w
 * `exon_sums_per_study`
 * `junction_counts_per_study`
 
-Additionally, the unifier creates the junction backing indexes for Snaptron:
+Additionally, the unifier creates the backing indexes for *junctions* for Snaptron:
 
 * `junctions.bgz`
 * `junctions.bgz.tbi`
@@ -159,13 +187,15 @@ Additionally, the unifier creates the junction backing indexes for Snaptron:
 
 `ids.tsv`
 
-You can skip either the gene/exon sums aggregation or the junction counts aggregation if you only want to run or the other:
+If you only want to run one of the 2 steps in the unifier (either gene+exon sums OR junction counts), you can skip the other operation:
 
-```export SKIP_SUMS=1 && ...```
+```export SKIP_JUNCTIONS=1 && /bin/bash run_recount_unify.sh ...```
+to run only gene+exon sums
 
 or
 
-```export SKIP_JUNCTIONS=1 && ...```
+```export SKIP_SUMS=1 && /bin/bash run_recount_unify.sh ...```
+to run only junction counts
 
 ### Layout of links to recount-pump output for recount-unifier
 
@@ -188,26 +218,3 @@ where `sra_human_v3_41_in26354_att2` is the symlink to the actual recount-pump g
 `study_loworder` and `run_loworder` are *always* the last 2 characters of the study and run accessions/IDs respectively.
 
 Your study and run accessions/IDs may be very different the SRA example here, but they should still work in this setup.  However, single letter studies/runs probably won't.
-
-
-## Getting Reference Indexes
-
-You will need to either download or pre-build the reference index files including the STAR, Salmon, the transcriptome, and HISAT2 indexes used in the monorail pipeline.
-
-Reference indexes + annotations are already built/extracted for human (HG38, Gencode V26) and mouse (GRCM38, Gencode M23).
-
-For human HG38, `cd` into the path you will use for the `$RECOUNT_REF_HOST` path in the `singularity/run_recount_pump.sh` runner script and then run this script from the root of this repo:
-
-`get_human_ref_indexes.sh`
-
-Similarly for mouse GRCM38, do the same as above but run:
-
-`get_mouse_ref_indexes.sh`
-
-For the purpose of building your own reference indexes, the versions of the 3 tools that use them are:
-
-* STAR 2.7.3a
-* Salmon 0.12.0
-* HISAT2 2.1.0
-
-For the unifier, run the `get_unify_refs.sh` script with either `hg38` or `grcm38` as the one argument.
