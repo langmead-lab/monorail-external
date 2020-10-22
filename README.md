@@ -152,19 +152,16 @@ This will keep the first pass alignment BAM, the original FASTQ files, and will 
 
 If compatibility with recount3 gene/exon/junction matrix formats is required, the output of recount-pump needs to be organized in a specific way for the Unifier to properly produce per-study level matrices as in recount3. 
 
-The `scripts/find_done.sh` script that gets run automatically in the `recount-unifier` container *should* organize the symlinks to the original, recount-pump output directories correctly, however, it's worth checking given that the rest of the Unifier is critically sensitive to how the links are organized.
-
 For example, if you find that you're getting blanks instead of actual integers in the `all.exon_bw_count.pasted.gz` file, it's likely a sign that the input directory hierarchy was not laid out correctly.
 
-Assuming your top level directory for input is called `links`, the expected directory hierarchy for each sequencing run/sample is:
+Assuming your top level directory for input is called `recount_pump_full`, the expected directory hierarchy for each sequencing run/sample is:
 
-`links/study_loworder/study/run_loworder/run/symlink_to_recount-pump_attempt_directory_for_this_run`
+`pump_output_full/study_loworder/study/run_loworder/run/symlink_to_recount-pump_attempt_directory_for_this_run`
 
-e.g.:
+e.g.
+`pump_output_full/42/ERP001942/25/ERR204925/ERP001942_in3_att0`
 
-`links/94/SRP019994/83/SRR797083/sra_human_v3_41_in26354_att2`
-
-where `sra_human_v3_41_in26354_att2` is the symlink to the actual recount-pump generated attempt director for run `SRR797083` in study `SRP019994`.
+where `ERP001942_in3_att0` contains the original output of recount-pump for the `ERR204925` sample.
 
 `study_loworder` and `run_loworder` are *always* the last 2 characters of the study and run accessions/IDs respectively.
 
