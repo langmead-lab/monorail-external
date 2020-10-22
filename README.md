@@ -194,6 +194,20 @@ to run only junction counts
 
 ### Unifier outputs
 
+#### Single study mode
+
+If the Unifier is run as shown above, there will be only one "study/project" set of sums/counts output:
+
+* `<annotation_id>.gene_sums.tsv.gz`
+* `all.exon_counts.rejoined.tsv.gz`
+
+where `<annotation_id>` is one of 
+
+* human: G026,G029,R109,F006,ERCC, or SIRV
+* mouse: M023,ERCC, or SIRV
+
+#### Multi study mode
+
 recount3 compatible sums/counts matrix output directories are in the `/path/to/working/directory` under:
 
 * `gene_sums_per_study`
