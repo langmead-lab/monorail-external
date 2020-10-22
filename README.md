@@ -161,13 +161,19 @@ https://quay.io/repository/broadsword/recount-unify?tab=tags
 Follow the same process as for recount-pump (above) to convert to singularity.
 
 
-```/bin/bash run_recount_unify.sh /path/to/recount-unifier-singularity.simg <reference_version> /path/to/references /path/to/working/directory /path/to/pump/output /path/to/sample_id_list.tsv <number_cores>```
+```/bin/bash run_recount_unify.sh /path/to/recount-unifier-singularity.simg <reference_version> /path/to/references /path/to/working/directory /path/to/pump/output /path/to/sample_metadata.tsv <number_cores>```
 
 `/path/to/references` here may be the same path as used in recount-pump, but it must contain an additional directory: `<reference_version>_unify`.
 
 where `reference_version` is either `hg38` or `grcm38`.
 
-`/path/to/sample_id_list.tsv` is a tab delimited list of `<study>TAB<sample_id>` lines.
+`sample_metadata.tsv` *must* have a header line and at least the following first 2 columns in exactly this order (it can have as many additional columns as desired):
+
+```
+study_id<TAB>sample_id...
+<study_id1>TAB<sample_id1>...
+...
+```
 
 `<study>` and `<sample_id>` can be anything that is unique within the set.
 
@@ -183,9 +189,13 @@ Additionally, the unifier creates the backing indexes for *junctions* for Snaptr
 * `junctions.bgz.tbi`
 * `junctions.sqlite`
 
-`rail_id`s are also created for every sample_id submitted in the `/path/to/sample_id_list.tsv` file and stored in:
+`rail_id`s are also created for every sample_id submitted in the `/path/to/sample_metadata.tsv` file and stored in:
 
-`ids.tsv`
+`samples.tsv`
+
+Further, the Unifier will generate Lucene metadata indices based on the `samples.tsv` file for Snaptron.
+
+Taken together, the above junctions block gzipped files & indices along with the Lucene indices is enough for a minimally viable Snaptron instance.
 
 If you only want to run one of the 2 steps in the unifier (either gene+exon sums OR junction counts), you can skip the other operation:
 
