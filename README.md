@@ -148,6 +148,28 @@ export KEEP_BAM=1 && export KEEP_FASTQ=1 && export NO_SHARED_MEM=1 && /bin/bash 
 
 This will keep the first pass alignment BAM, the original FASTQ files, and will force STAR to be run in NoSharedMemory mode with respect to it's genome index for the first pass alignment.
 
+### Layout of links to recount-pump output for recount-unifier
+
+If compatibility with recount3 gene/exon/junction matrix formats is required, the output of recount-pump needs to be organized in a specific way for the Unifier to properly produce per-study level matrices as in recount3. 
+
+The `scripts/find_done.sh` script that gets run automatically in the `recount-unifier` container *should* organize the symlinks to the original, recount-pump output directories correctly, however, it's worth checking given that the rest of the Unifier is critically sensitive to how the links are organized.
+
+For example, if you find that you're getting blanks instead of actual integers in the `all.exon_bw_count.pasted.gz` file, it's likely a sign that the input directory hierarchy was not laid out correctly.
+
+Assuming your top level directory for input is called `links`, the expected directory hierarchy for each sequencing run/sample is:
+
+`links/study_loworder/study/run_loworder/run/symlink_to_recount-pump_attempt_directory_for_this_run`
+
+e.g.:
+
+`links/94/SRP019994/83/SRR797083/sra_human_v3_41_in26354_att2`
+
+where `sra_human_v3_41_in26354_att2` is the symlink to the actual recount-pump generated attempt director for run `SRR797083` in study `SRP019994`.
+
+`study_loworder` and `run_loworder` are *always* the last 2 characters of the study and run accessions/IDs respectively.
+
+Your study and run accessions/IDs may be very different the SRA example here, but they should still work in this setup.  However, single letter studies/runs probably won't.
+
 ## Unifier (aggregation over per-sample pump outputs)
 
 https://quay.io/repository/broadsword/recount-unify?tab=tags
@@ -200,6 +222,7 @@ If the Unifier is run as shown above, there will be only one "study/project" set
 
 * `<annotation_id>.gene_sums.tsv.gz`
 * `all.exon_counts.rejoined.tsv.gz`
+* The Snaptron-ready outputs (block gzipped databases + Lucene indices)
 
 where `<annotation_id>` is one of 
 
@@ -240,25 +263,3 @@ Further, the Unifier will generate Lucene metadata indices based on the `samples
 * `lucene_indexed_numeric_types.tsv`
 
 Taken together, the above junctions block gzipped files & indices along with the Lucene indices is enough for a minimally viable Snaptron instance.
-
-### Layout of links to recount-pump output for recount-unifier
-
-Due to the importance of this part, this get its own section.
-
-The `scripts/find_done.sh` script that gets run automatically in the `recount-unifier` container *should* organize the symlinks to the original, recount-pump output directories correctly, however, it's worth checking given that the rest of the Unifier is critically sensitive to how the links are organized.
-
-For example, if you find that you're getting blanks instead of actual integers in the `all.exon_bw_count.pasted.gz` file, it's likely a sign that the input directory hierarchy was not laid out correctly.
-
-Assuming your top level directory for input is called `links`, the expected directory hierarchy for each sequencing run/sample is:
-
-`links/study_loworder/study/run_loworder/run/symlink_to_recount-pump_attempt_directory_for_this_run`
-
-e.g.:
-
-`links/94/SRP019994/83/SRR797083/sra_human_v3_41_in26354_att2`
-
-where `sra_human_v3_41_in26354_att2` is the symlink to the actual recount-pump generated attempt director for run `SRR797083` in study `SRP019994`.
-
-`study_loworder` and `run_loworder` are *always* the last 2 characters of the study and run accessions/IDs respectively.
-
-Your study and run accessions/IDs may be very different the SRA example here, but they should still work in this setup.  However, single letter studies/runs probably won't.
