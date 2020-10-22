@@ -152,11 +152,17 @@ This will keep the first pass alignment BAM, the original FASTQ files, and will 
 
 The unifier aggregates the following cross sample outputs:
 
-* gene sums
-* exon sums
-* junction split read counts
+* gene sums (in `gene_sums_per_study`)
+* exon sums (in `exon_sums_per_study`)
+* junction split read counts (in `junction_counts_per_study`)
 
 The first 2 are run together and then the junctions are aggregated.
+
+The outputs are further organized by:
+`study_loworder/study/`
+
+where `study_loworder` is the last 2 characters of the study ID, e.g. if study is ERP001942, then the output for gene sums will be saved under:
+`gene_sums_per_study/42/ERP001942`
 
 https://quay.io/repository/broadsword/recount-unify?tab=tags
 
