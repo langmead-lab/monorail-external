@@ -182,6 +182,16 @@ study_id<TAB>sample_id...
 
 `<study>` and `<sample_id>` can be anything that is unique within the set.
 
+If you only want to run one of the 2 steps in the unifier (either gene+exon sums OR junction counts), you can skip the other operation:
+
+```export SKIP_JUNCTIONS=1 && /bin/bash run_recount_unify.sh ...```
+to run only gene+exon sums
+
+or
+
+```export SKIP_SUMS=1 && /bin/bash run_recount_unify.sh ...```
+to run only junction counts
+
 ### Unifier outputs
 
 recount3 compatible sums/counts matrix output directories are in the `/path/to/working/directory` under:
@@ -216,16 +226,6 @@ Further, the Unifier will generate Lucene metadata indices based on the `samples
 * `lucene_indexed_numeric_types.tsv`
 
 Taken together, the above junctions block gzipped files & indices along with the Lucene indices is enough for a minimally viable Snaptron instance.
-
-If you only want to run one of the 2 steps in the unifier (either gene+exon sums OR junction counts), you can skip the other operation:
-
-```export SKIP_JUNCTIONS=1 && /bin/bash run_recount_unify.sh ...```
-to run only gene+exon sums
-
-or
-
-```export SKIP_SUMS=1 && /bin/bash run_recount_unify.sh ...```
-to run only junction counts
 
 ### Layout of links to recount-pump output for recount-unifier
 
