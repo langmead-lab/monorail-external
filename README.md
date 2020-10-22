@@ -156,16 +156,18 @@ For example, if you find that you're getting blanks instead of actual integers i
 
 Assuming your top level directory for input is called `recount_pump_full`, the expected directory hierarchy for each sequencing run/sample is:
 
-`pump_output_full/study_loworder/study/run_loworder/run/symlink_to_recount-pump_attempt_directory_for_this_run`
+`pump_output_full/study_loworder/study/sample_loworder/sample/monorail_assigned_unique_sample_attempt_id/`
 
 e.g.
 `pump_output_full/42/ERP001942/25/ERR204925/ERP001942_in3_att0`
 
 where `ERP001942_in3_att0` contains the original output of recount-pump for the `ERR204925` sample.
 
-`study_loworder` and `run_loworder` are *always* the last 2 characters of the study and run accessions/IDs respectively.
+The format of the `monorail_assigned_unique_sample_attempt_id` is `originalsampleid_in#_att0`.  `in#` should be unique across all samples.
 
-Your study and run accessions/IDs may be very different the SRA example here, but they should still work in this setup.  However, single letter studies/runs probably won't.
+`study_loworder` and `sample_loworder` are *always* the last 2 characters of the study and sample IDs respectively.
+
+Your study and  sample IDs may be very different the SRA example here, but they should still work in this setup.  However, single letter studies/runs probably won't.
 
 ## Unifier (aggregation over per-sample pump outputs)
 
