@@ -150,6 +150,12 @@ This will keep the first pass alignment BAM, the original FASTQ files, and will 
 
 ## Unifier (aggregation over per-sample pump outputs)
 
+https://quay.io/repository/broadsword/recount-unify?tab=tags
+
+`1.0.2` is a stable version as of 2020-10-22
+
+Follow the same process as for recount-pump (above) to convert to singularity.
+
 The unifier aggregates the following cross sample outputs:
 
 * gene sums (in `gene_sums_per_study`)
@@ -164,12 +170,20 @@ The outputs are further organized by:
 where `study_loworder` is the last 2 characters of the study ID, e.g. if study is ERP001942, then the output for gene sums will be saved under:
 `gene_sums_per_study/42/ERP001942`
 
-https://quay.io/repository/broadsword/recount-unify?tab=tags
+Additionally, the Unifier outputs Snaptron ready junction and metadata indices:
 
-`1.0.1` is a stable version as of 2020-10-21
+* `junctions.bgz`
+* `junctions.bgz.tbi`
+* `junctions.sqlite`
+* `samples.tsv`
+* `samples.fields.tsv`
+* `lucene_full_standard`
+* `lucene_full_ws`
+* `lucene_indexed_numeric_types.tsv`
 
-Follow the same process as for recount-pump (above) to convert to singularity.
+These files are all the backing data/indices needed to setup a minimally viable Snaptron server.
 
+To run the Unifier:
 
 ```
 /bin/bash run_recount_unify.sh /path/to/recount-unifier-singularity.simg <reference_version> /path/to/references /path/to/working/directory /path/to/pump/output /path/to/sample_metadata.tsv <number_cores>
