@@ -184,7 +184,7 @@ The unifier aggregates the following cross sample outputs:
 To run the Unifier:
 
 ```
-/bin/bash run_recount_unify.sh /path/to/recount-unifier-singularity.simg <reference_version> /path/to/references /path/to/working/directory /path/to/pump/output /path/to/sample_metadata.tsv <number_cores>
+/bin/bash run_recount_unify.sh /path/to/recount-unifier-singularity.simg <reference_version> /path/to/references /path/to/working/directory /path/to/pump/output /path/to/sample_metadata.tsv <number_cores> 1
 ```
 
 `/path/to/references` here may be the same path as used in recount-pump, but it must contain an additional directory: `<reference_version>_unify`.
@@ -200,6 +200,9 @@ study_id<TAB>sample_id...
 ```
 
 `<study>` and `<sample_id>` can be anything that is unique within the set.
+
+The trailing `1` in the command signifies that the aggregation will be over multiple studies.
+This is the only working mode of the unifier as of 2020-10-22 but requires very careful directory/file naming/layout of the input data (recount-pump's output).
 
 If you only want to run one of the 2 steps in the unifier (either gene+exon sums OR junction counts), you can skip the other operation:
 
