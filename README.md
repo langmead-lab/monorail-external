@@ -158,30 +158,9 @@ Follow the same process as for recount-pump (above) to convert to singularity.
 
 The unifier aggregates the following cross sample outputs:
 
-* gene sums (in `gene_sums_per_study`)
-* exon sums (in `exon_sums_per_study`)
-* junction split read counts (in `junction_counts_per_study`)
-
-The first 2 are run together and then the junctions are aggregated.
-
-The outputs are further organized by:
-`study_loworder/study/`
-
-where `study_loworder` is the last 2 characters of the study ID, e.g. if study is ERP001942, then the output for gene sums will be saved under:
-`gene_sums_per_study/42/ERP001942`
-
-Additionally, the Unifier outputs Snaptron ready junction and metadata indices:
-
-* `junctions.bgz`
-* `junctions.bgz.tbi`
-* `junctions.sqlite`
-* `samples.tsv`
-* `samples.fields.tsv`
-* `lucene_full_standard`
-* `lucene_full_ws`
-* `lucene_indexed_numeric_types.tsv`
-
-These files are all the backing data/indices needed to setup a minimally viable Snaptron server.
+* gene sums
+* exon sums
+* junction split read counts
 
 To run the Unifier:
 
@@ -203,13 +182,23 @@ study_id<TAB>sample_id...
 
 `<study>` and `<sample_id>` can be anything that is unique within the set.
 
+### Unifier outputs
+
 recount3 compatible sums/counts matrix output directories are in the `/path/to/working/directory` under:
 
 * `gene_sums_per_study`
 * `exon_sums_per_study`
 * `junction_counts_per_study`
 
-Additionally, the unifier creates the backing indexes for *junctions* for Snaptron:
+The first 2 are run together and then the junctions are aggregated.
+
+The outputs are further organized by:
+`study_loworder/study/`
+
+where `study_loworder` is the last 2 characters of the study ID, e.g. if study is ERP001942, then the output for gene sums will be saved under:
+`gene_sums_per_study/42/ERP001942`
+
+Additionally, the Unifier outputs Snaptron ready junction databases and indices:
 
 * `junctions.bgz`
 * `junctions.bgz.tbi`
@@ -219,7 +208,12 @@ Additionally, the unifier creates the backing indexes for *junctions* for Snaptr
 
 `samples.tsv`
 
-Further, the Unifier will generate Lucene metadata indices based on the `samples.tsv` file for Snaptron.
+Further, the Unifier will generate Lucene metadata indices based on the `samples.tsv` file for Snaptron:
+
+* `samples.fields.tsv`
+* `lucene_full_standard`
+* `lucene_full_ws`
+* `lucene_indexed_numeric_types.tsv`
 
 Taken together, the above junctions block gzipped files & indices along with the Lucene indices is enough for a minimally viable Snaptron instance.
 
