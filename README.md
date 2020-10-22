@@ -203,6 +203,7 @@ study_id<TAB>sample_id...
 
 The trailing `1` in the command signifies that the aggregation will be over multiple studies.
 This is the only working mode of the unifier as of 2020-10-22 but requires very careful directory/file naming/layout of the input data (recount-pump's output).
+Please see #layout-of-links-to-recount-pump-output-for-recount-unifier section earlier to do this correctly.
 
 If you only want to run one of the 2 steps in the unifier (either gene+exon sums OR junction counts), you can skip the other operation:
 
