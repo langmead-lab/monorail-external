@@ -148,26 +148,6 @@ export KEEP_BAM=1 && export KEEP_FASTQ=1 && export NO_SHARED_MEM=1 && /bin/bash 
 
 This will keep the first pass alignment BAM, the original FASTQ files, and will force STAR to be run in NoSharedMemory mode with respect to it's genome index for the first pass alignment.
 
-### Layout of links to recount-pump output for recount-unifier
-
-If compatibility with recount3 gene/exon/junction matrix formats is required, the output of recount-pump needs to be organized in a specific way for the Unifier to properly produce per-study level matrices as in recount3. 
-
-For example, if you find that you're getting blanks instead of actual integers in the `all.exon_bw_count.pasted.gz` file, it's likely a sign that the input directory hierarchy was not laid out correctly.
-
-Assuming your top level directory for input is called `recount_pump_full`, the expected directory hierarchy for each sequencing run/sample is:
-
-`pump_output_full/study_loworder/study/sample_loworder/sample/monorail_assigned_unique_sample_attempt_id/`
-
-e.g.
-`pump_output_full/42/ERP001942/25/ERR204925/ERP001942_in3_att0`
-
-where `ERP001942_in3_att0` contains the original output of recount-pump for the `ERR204925` sample.
-
-The format of the `monorail_assigned_unique_sample_attempt_id` is `originalsampleid_in#_att0`.  `in#` should be unique across all samples.
-
-`study_loworder` and `sample_loworder` are *always* the last 2 characters of the study and sample IDs respectively.
-
-Your study and  sample IDs may be very different the SRA example here, but they should still work in this setup.  However, single letter studies/runs probably won't.
 
 ## Unifier (aggregation over per-sample pump outputs)
 
@@ -219,20 +199,7 @@ to run only junction counts
 
 ### Unifier outputs
 
-#### Single study mode
-
-If the Unifier is run as shown above, there will be only one "study/project" set of sums/counts output:
-
-* `<annotation_id>.gene_sums.tsv.gz`
-* `all.exon_counts.rejoined.tsv.gz`
-* The Snaptron-ready outputs (block gzipped databases + Lucene indices)
-
-where `<annotation_id>` is one of 
-
-* human: G026,G029,R109,F006,ERCC, or SIRV
-* mouse: M023,ERCC, or SIRV
-
-#### Multi study mode
+#### Multi study mode (default)
 
 recount3 compatible sums/counts matrix output directories are in the `/path/to/working/directory` under:
 
@@ -266,3 +233,24 @@ Further, the Unifier will generate Lucene metadata indices based on the `samples
 * `lucene_indexed_numeric_types.tsv`
 
 Taken together, the above junctions block gzipped files & indices along with the Lucene indices is enough for a minimally viable Snaptron instance.
+
+### [Historical background] Layout of links to recount-pump output for recount-unifier
+
+If compatibility with recount3 gene/exon/junction matrix formats is required, the output of recount-pump needs to be organized in a specific way for the Unifier to properly produce per-study level matrices as in recount3. 
+
+For example, if you find that you're getting blanks instead of actual integers in the `all.exon_bw_count.pasted.gz` file, it's likely a sign that the input directory hierarchy was not laid out correctly.
+
+Assuming your top level directory for input is called `recount_pump_full`, the expected directory hierarchy for each sequencing run/sample is:
+
+`pump_output_full/study_loworder/study/sample_loworder/sample/monorail_assigned_unique_sample_attempt_id/`
+
+e.g.
+`pump_output_full/42/ERP001942/25/ERR204925/ERP001942_in3_att0`
+
+where `ERP001942_in3_att0` contains the original output of recount-pump for the `ERR204925` sample.
+
+The format of the `monorail_assigned_unique_sample_attempt_id` is `originalsampleid_in#_att0`.  `in#` should be unique across all samples.
+
+`study_loworder` and `sample_loworder` are *always* the last 2 characters of the study and sample IDs respectively.
+
+Your study and  sample IDs may be very different the SRA example here, but they should still work in this setup.  However, single letter studies/runs probably won't.
