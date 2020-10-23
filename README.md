@@ -166,7 +166,7 @@ The unifier aggregates the following cross sample outputs:
 To run the Unifier:
 
 ```
-/bin/bash run_recount_unify.sh /path/to/recount-unifier-singularity.simg <reference_version> /path/to/references /path/to/working/directory /path/to/pump/output /path/to/sample_metadata.tsv <number_cores> 1
+/bin/bash run_recount_unify.sh /path/to/recount-unifier-singularity.simg <reference_version> /path/to/references /path/to/working/directory /path/to/pump/output /path/to/sample_metadata.tsv <number_cores>
 ```
 
 `/path/to/references` here may be the same path as used in recount-pump, but it must contain an additional directory: `<reference_version>_unify`.
@@ -182,10 +182,6 @@ study_id<TAB>sample_id...
 ```
 
 `<study>` and `<sample_id>` can be anything that is unique within the set.
-
-The trailing `1` in the command signifies that the aggregation will be over multiple studies.
-This is the only working mode of the unifier as of 2020-10-22 but requires very careful directory/file naming/layout of the input data (recount-pump's output).
-Please see #layout-of-links-to-recount-pump-output-for-recount-unifier section earlier to do this correctly.
 
 If you only want to run one of the 2 steps in the unifier (either gene+exon sums OR junction counts), you can skip the other operation:
 
@@ -233,6 +229,8 @@ Further, the Unifier will generate Lucene metadata indices based on the `samples
 * `lucene_indexed_numeric_types.tsv`
 
 Taken together, the above junctions block gzipped files & indices along with the Lucene indices is enough for a minimally viable Snaptron instance.
+
+Intermediate and log files for the Unifier run can be found in `run_files`
 
 ### [Historical background] Layout of links to recount-pump output for recount-unifier
 
