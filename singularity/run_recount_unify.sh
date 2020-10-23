@@ -16,20 +16,38 @@ REF_DIR_HOST=$3
 WORKING_DIR_HOST=$4
 
 #full path on host to where the output from recount-pump resides
+#this needs to be writable by this script!
 INPUT_DIR_HOST=$5
 
-#list of 2 or more study_id<TAB>sample_id
+#list of 2 or more study_id<TAB>sample_id + any number of tab delimited optional fields
+#this file MUST have a header otherwise the first row will be skipped!
 SAMPLE_ID_MANIFEST_HOST=$6
 
 #number of processes to start within container, 10-40 are reasonable depending on the system/run
 NUM_CPUS=$7
 
-#only used if you explicitly want recount-unify to build multiple studies
-#this is usually true only for specific cases (e.g. recount)
-MULTIPLE_STUDIES=$8
+export MULTI_STUDY=1
+#optional, only used if you explicitly want recount-unify to build a single study
+#this is usually true only when you want to skip producing recount3 formatted data
+#e.g. you only want Snaptron-ready output
+SINGLE_STUDY_ONLY=$8
+if [[ ! -z $SINGLE_STUDY_ONLY ]]; then
+    MULTI_STUDY=
+fi
 
 #optional, this is used as the compilation_id in the jx output, defaults to 0
 export PROJECT_ID=$9
+
+#compilation short name (e.g. "sra", "gtex", or "tcga", to be compatible with recount3 outputs)
+#custom denotes a non-recount project
+export PROJECT_SHORT_NAME='custom'
+
+#make sure input data is properly organized for the Unifier
+#assumes an original output format: $INPUT_DIR_HOST/sampleID_att0/sampleID!studyID!*.manifest
+#we can skip this if $SKIP_FIND is set in the running environment
+if [[ ! -z $MULTI_STUDY  && -z $SKIP_FIND ]]; then
+    find $INPUT_DIR_HOST -name "*.manifest" | perl -ne 'chomp; $f=$_; @f=split(/\//,$f); $fm=pop(@f); $original=join("/",@f); $run_dir=pop(@f); @f2=split(/!/,$fm); $sample=shift(@f2); $study=shift(@f2); $study=~/(..)$/; $lo1=$1; $sample=~/(..)$/; $lo2=$1; $parent=join("/",@f); $newsub="$parent/$lo1/$study/$lo2/$sample"; $i++; $run_dir=~s/(_att\d+)$/_in$i$1/;  `mkdir -p $newsub/$run_dir ; mv $original/* $newsub/$run_dir/ ; touch $newsub/$run_dir.done`;'
+fi
 
 mkdir -p $WORKING_DIR_HOST
 
@@ -69,10 +87,16 @@ export REF_DIR=/container-mounts/ref
 
 export RECOUNT_CPUS=$NUM_CPUS
 
-export MULTI_STUDY=$MULTIPLE_STUDIES
 
+#do some munging of the passed in sample IDs + optional metadata files
 sample_id_manfest_fn=$(basename $SAMPLE_ID_MANIFEST_HOST)
-export SAMPLE_ID_MANIFEST=$WORKING_DIR/$sample_id_manfest_fn
+#first copy the full original samples manifest into a directory visible to the container
 cp $SAMPLE_ID_MANIFEST_HOST $WORKING_DIR_HOST/$sample_id_manfest_fn
+export SAMPLE_ID_MANIFEST_HOST_ORIG=$WORKING_DIR_HOST/$sample_id_manfest_fn
+export SAMPLE_ID_MANIFEST_HOST=$WORKING_DIR_HOST/ids.input
+#now cut out just the 1st 2 columns (study, sample_id), expecting a header
+cut -f 1,2 $SAMPLE_ID_MANIFEST_HOST_ORIG | tail -n+2 > $SAMPLE_ID_MANIFEST_HOST
+export SAMPLE_ID_MANIFEST=$WORKING_DIR/ids.input
+export SAMPLE_ID_MANIFEST_ORIG=$WORKING_DIR/$sample_id_manfest_fn
 
 singularity exec -B $INPUT_DIR_HOST:$INPUT_DIR -B $WORKING_DIR_HOST:$WORKING_DIR -B $REF_DIR_HOST:$REF_DIR $singularity_image_file /bin/bash -x -c "source activate recount-unify && /recount-unify/workflow.bash"
