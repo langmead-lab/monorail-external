@@ -163,6 +163,19 @@ The unifier aggregates the following cross sample outputs:
 * exon sums
 * junction split read counts
 
+The Unifier assumes the directory/file layout and naming of default runs of recount-pump, where a single sample's output is stored like this under one main parent directory:
+
+`<parent_directory>/<sampleID>_att0/`
+
+e.g.
+
+`pump_output/sample1_att0/`
+`pump_output/sample2_att0/`
+`pump_output/sample3_att0/`
+....
+
+The `/path/to/pump/output` argument below references the path to the `<parent_directory>` above.
+
 To run the Unifier:
 
 ```
