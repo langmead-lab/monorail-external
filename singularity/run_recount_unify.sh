@@ -1,5 +1,6 @@
 #make sure singularity is loaded/in $PATH
 umask 0077
+set -exo pipefail
 
 #singularity_image_file=recount-unify_latest.sif
 
@@ -100,3 +101,11 @@ export SAMPLE_ID_MANIFEST=$WORKING_DIR/ids.input
 export SAMPLE_ID_MANIFEST_ORIG=$WORKING_DIR/$sample_id_manfest_fn
 
 singularity exec -B $INPUT_DIR_HOST:$INPUT_DIR -B $WORKING_DIR_HOST:$WORKING_DIR -B $REF_DIR_HOST:$REF_DIR $singularity_image_file /bin/bash -x -c "source activate recount-unify && /recount-unify/workflow.bash"
+
+#putting all relevant final output files in one directory
+mkdir -p ../run_files
+mv * ../run_files/
+mv ../run_files/ ./
+pushd run_files
+mv ids.tsv junctions.* lucene* samples.* gene_sums_per_study exon_sums_per_study junction_counts_per_study ../
+popd
