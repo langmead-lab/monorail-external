@@ -1,5 +1,5 @@
-#make sure singularity is loaded/in $PATH
-umask 0077
+#!/usr/bin/env bash
+#make sure singularity is loaded/in $PATH ahead of time
 set -exo pipefail
 
 #singularity_image_file=recount-unify_latest.sif
@@ -43,14 +43,18 @@ export PROJECT_ID=$9
 #custom denotes a non-recount project
 export PROJECT_SHORT_NAME='custom'
 
+INPUT_FROM_PUMP_DIR=$WORKING_DIR_HOST/input_from_pump
+mkdir -p $INPUT_FROM_PUMP_DIR
+
+#NOTE: the following assumes the unifier is being run on the *same filesystem* as the pump
+#as it makes hard links to the pump output
 #make sure input data is properly organized for the Unifier
 #assumes an original output format: $INPUT_DIR_HOST/sampleID_att0/sampleID!studyID!*.manifest
 #we can skip this if $SKIP_FIND is set in the running environment
+#../geuvadis_small_output/ERR188431_att0/ERR188431!ERP001942!hg38!sra.align.log
 if [[ ! -z $MULTI_STUDY  && -z $SKIP_FIND ]]; then
-    find $INPUT_DIR_HOST -name "*.manifest" | perl -ne 'chomp; $f=$_; @f=split(/\//,$f); $fm=pop(@f); $original=join("/",@f); $run_dir=pop(@f); @f2=split(/!/,$fm); $sample=shift(@f2); $study=shift(@f2); $study=~/(..)$/; $lo1=$1; $sample=~/(..)$/; $lo2=$1; $parent=join("/",@f); $newsub="$parent/$lo1/$study/$lo2/$sample"; $i++; $run_dir=~s/(_att\d+)$/_in$i$1/;  `mkdir -p $newsub/$run_dir ; mv $original/* $newsub/$run_dir/ ; touch $newsub/$run_dir.done`;'
+    find $INPUT_DIR_HOST -name '*!*' | perl -ne 'BEGIN { $run_id=1; } $working_dir="'$INPUT_FROM_PUMP_DIR'"; chomp; $f=$_; @f=split(/\//,$f); $fm=pop(@f); $original=join("/",@f); $run_dir=pop(@f); @f2=split(/!/,$fm); $sample=shift(@f2); if(!$h{$sample}) { $h{$sample}=$run_id++; } $i=$h{$sample}; $study=shift(@f2); $study=~/(..)$/; $lo1=$1; $sample=~/(..)$/; $lo2=$1; $parent=join("/",@f); $newsub="$working_dir/$lo1/$study/$lo2/$sample"; $i++; $run_dir=~s/(_att\d+)$/_in$i$1/;  `mkdir -p $newsub/$run_dir ; ln -f $f $newsub/$run_dir/ ; touch $newsub/$run_dir.done`;'
 fi
-
-mkdir -p $WORKING_DIR_HOST
 
 #inside container mount for REF files
 export REF_DIR=/container-mounts/ref
@@ -100,7 +104,7 @@ cut -f 1,2 $SAMPLE_ID_MANIFEST_HOST_ORIG | tail -n+2 > $SAMPLE_ID_MANIFEST_HOST
 export SAMPLE_ID_MANIFEST=$WORKING_DIR/ids.input
 export SAMPLE_ID_MANIFEST_ORIG=$WORKING_DIR/$sample_id_manfest_fn
 
-singularity exec -B $INPUT_DIR_HOST:$INPUT_DIR -B $WORKING_DIR_HOST:$WORKING_DIR -B $REF_DIR_HOST:$REF_DIR $singularity_image_file /bin/bash -x -c "source activate recount-unify && /recount-unify/workflow.bash"
+singularity exec -B $INPUT_FROM_PUMP_DIR:$INPUT_DIR -B $WORKING_DIR_HOST:$WORKING_DIR -B $REF_DIR_HOST:$REF_DIR $singularity_image_file /bin/bash -x -c "source activate recount-unify && /recount-unify/workflow.bash"
 
 #putting all relevant final output files in one directory
 mkdir -p ../run_files
