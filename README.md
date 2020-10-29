@@ -196,6 +196,14 @@ study_id<TAB>sample_id...
 
 `<study>` and `<sample_id>` can be anything that is unique within the set.
 
+`/path/to/pump/output` is the path to the parent directory where the pump outputs are stored, e.g. there should be one or more subdirectories in that directory named:
+
+```
+<sample_id1>_att0
+<sample_id2>_att0
+...
+```
+
 If you only want to run one of the 2 steps in the unifier (either gene+exon sums OR junction counts), you can skip the other operation:
 
 ```export SKIP_JUNCTIONS=1 && /bin/bash run_recount_unify.sh ...```
