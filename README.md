@@ -174,7 +174,7 @@ e.g.
 `pump_output/sample3_att0/`
 ....
 
-The `/path/to/pump/output` argument below references the path to the `<parent_directory>` above.
+The `/path/to/pump/output` argument below references the path to the `<parent_directory>` above.  This path *must* be on the same filesystem as the unifier's working directory (`path/to/working/directory` below).  This is because the unifier script will hardlink the pump's output files into the expected directry hierarchy it needs to run.
 
 To run the Unifier:
 
@@ -195,14 +195,6 @@ study_id<TAB>sample_id...
 ```
 
 `<study>` and `<sample_id>` can be anything that is unique within the set.
-
-`/path/to/pump/output` is the path to the parent directory where the pump outputs are stored, e.g. there should be one or more subdirectories in that directory named:
-
-```
-<sample_id1>_att0
-<sample_id2>_att0
-...
-```
 
 If you only want to run one of the 2 steps in the unifier (either gene+exon sums OR junction counts), you can skip the other operation:
 
