@@ -1,9 +1,14 @@
-#make sure singularity is loaded/in $PATH
+#make sure singularity/docker are in PATH
 umask 0077
 export PERL5LIB=
 
-#e.g. recount-rs5-1.0.2.simg or recount-rs5-1.0.2.sif
-singularity_image_file=$1
+#this script will automatically attempt to determine whether Singularity or Docker should be run
+#based on whether or not the argument to $container_image image below has a ".simg" or a ".sif" suffix
+#if not, it will run Docker
+
+#e.g. if Singularity, then something like recount-rs5-1.0.2.simg or recount-rs5-1.0.2.sif
+#OR if Docker, the name of the image in the local repo or the full name:version
+container_image=$1
 
 #run accession (sra, e.g. SRR390728), or internal ID (local), 
 #this can be anything as long as its consistently used to identify the particular sample
@@ -23,15 +28,19 @@ fp1=$7
 #full file path to second read mates (optional)
 fp2=$8
 
+#change this if you want a different root path for all the outputs
+#(Docker needs absolute paths to be volume bound in the container)
+root=`pwd`
+
 export RECOUNT_JOB_ID=${run_acc}_in0_att0
 
 #assumes these directories are subdirs in current working directory
-export RECOUNT_INPUT_HOST=input/${run_acc}_att0
+export RECOUNT_INPUT_HOST=$root/input/${run_acc}_att0
 #RECOUNT_OUTPUT_HOST stores the final set of files and some of the intermediate files while the process is running.
-export RECOUNT_OUTPUT_HOST=output/${run_acc}_att0
+export RECOUNT_OUTPUT_HOST=$root/output/${run_acc}_att0
 #RECOUNT_TEMP_HOST stores the initial download of sequence files, typically this should be on a fast filesystem as it's the most IO intensive from our experience (use either a performance oriented distributed FS like Lustre or GPFS, or a ramdisk).
-export RECOUNT_TEMP_HOST=temp/${run_acc}_att0
-#may need to change this to real path to the reference indexes (this directory should contain the ref_name passed in e.g. "hg38")
+export RECOUNT_TEMP_HOST=$root/temp/${run_acc}_att0
+#the *full* path to the reference indexes on the host (this directory should contain the ref_name passed in as a subdir e.g. "hg38")
 export RECOUNT_REF_HOST=$ref_path
 
 mkdir -p $RECOUNT_TEMP_HOST/input
@@ -65,8 +74,16 @@ export RECOUNT_REF=/container-mounts/recount/ref
 
 export RECOUNT_CPUS=$num_cpus
 
-export RECOUNT_TEMP_BIG_HOST=/dev/shm/temp_big/${run_acc}_att0
+export RECOUNT_TEMP_BIG_HOST=$root/temp_big/${run_acc}_att0
 mkdir -p $RECOUNT_TEMP_BIG_HOST
 export RECOUNT_TEMP_BIG=/container-mounts/recount/temp_big
 
-singularity exec -B $RECOUNT_REF_HOST:$RECOUNT_REF -B $RECOUNT_TEMP_BIG_HOST:$RECOUNT_TEMP_BIG -B $RECOUNT_TEMP_HOST:$RECOUNT_TEMP -B $RECOUNT_INPUT_HOST:$RECOUNT_INPUT -B $RECOUNT_OUTPUT_HOST:$RECOUNT_OUTPUT $singularity_image_file /bin/bash -x -c "source activate recount && /startup.sh && /workflow.bash"
+use_singularity=$(perl -e 'print "1\n" if("'$container_image'"=~/(\.sif$)|(\.simg$)/);')
+
+if [[ -z $use_singularity ]]; then
+    echo "running Docker"
+    docker run --rm -e RECOUNT_INPUT -e RECOUNT_OUTPUT -e RECOUNT_REF -e RECOUNT_TEMP -e RECOUNT_TEMP_BIG -e RECOUNT_CPUS -e KEEP_BAM -e KEEP_FASTQ -e KEEP_UNMAPPED_FASTQ -e NO_SHARED_MEM -v $RECOUNT_REF_HOST:$RECOUNT_REF -v $RECOUNT_TEMP_BIG_HOST:$RECOUNT_TEMP_BIG -v $RECOUNT_TEMP_HOST:$RECOUNT_TEMP -v $RECOUNT_INPUT_HOST:$RECOUNT_INPUT -v $RECOUNT_OUTPUT_HOST:$RECOUNT_OUTPUT --name recount-pump $container_image
+else
+    echo "running Singularity"
+    singularity exec -B $RECOUNT_REF_HOST:$RECOUNT_REF -B $RECOUNT_TEMP_BIG_HOST:$RECOUNT_TEMP_BIG -B $RECOUNT_TEMP_HOST:$RECOUNT_TEMP -B $RECOUNT_INPUT_HOST:$RECOUNT_INPUT -B $RECOUNT_OUTPUT_HOST:$RECOUNT_OUTPUT $container_image /bin/bash -x -c "source activate recount && /startup.sh && /workflow.bash"
+fi
