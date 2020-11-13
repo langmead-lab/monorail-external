@@ -178,8 +178,8 @@ The `/path/to/pump/output` argument below references the path to the `<parent_di
 
 An example of the two might be:
 
-`/data/recount-pump/output/study1` where the output from recount pump run on "study1" is stored as defined above
-`/data/recount-unify/study1_working` where the unifier is run for "study1"
+* `/data/recount-pump/output/study1` where the output from recount pump run on "study1" is stored as defined above
+* `/data/recount-unify/study1_working` where the unifier is run for "study1"
 
 
 To run the Unifier:
