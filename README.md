@@ -174,7 +174,7 @@ e.g.
 `pump_output/sample3_att0/`
 ....
 
-The `/path/to/pump/output` argument below references the path to the `<parent_directory>` above.  This path *must* be on the same filesystem as the unifier's working directory (`path/to/working/directory` below).  This is because the unifier script will hardlink the pump's output files into the expected directry hierarchy it needs to run.
+The `/path/to/pump/output` argument below references the path to the `<parent_directory>` above.  This path *must* be on the same filesystem as the unifier's working directory (`path/to/working/directory` below).  This is because the unifier script will hardlink the pump's output files into the expected directry hierarchy it needs to run.  That said, the  `/path/to/pump/output` must not be a `parent` directory to the unifier's working directory, or else the unifier will exhibit undefined behavior.  The two directories must be on the same filesystem but they should be kept separate as far as neither should be a subdirectory of the other.
 
 To run the Unifier:
 
