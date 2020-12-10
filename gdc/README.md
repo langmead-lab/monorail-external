@@ -49,6 +49,12 @@ The `gdc-client` can also take a "manifest" file either downloaded from the shop
 
 There are times where  the `gdc-client` appeared to stall, these may be due to filesystem issues or it may be the client itself.  Using the `timeout` command from `bash` in front of a `gdc-client` command may help get around this in the context of a pipeline where you want to quickly fail individual files which can't download or are too slow.
 
+# Post download extraction operation
+
+RNA-seq files from GDC are typically packaged as either gzipped TAR files containing FASTQ files *OR* as tar files containing gzipped FASTQs.
+
+Before running the downloaded files from GDC through Monorail-external, you *must* extract the FASTQs ahead of time.
+
 # Running with Monorail's Containers
 
 Monorail run its alignment workflow (the `pump`), including downloads in Docker/Singularity containers. 
