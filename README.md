@@ -253,9 +253,16 @@ Intermediate and log files for the Unifier run can be found in `run_files`
 
 ### Download from SRA/dbGaP/GDC Details
 
+The following links are prodivded to detail the download operation from various repos including protected data (e.g. dbGaP and GDC).
+
+Monorail already performs the SRA, and if properly setup, the dbGaP downloads as part of it's built-in downloader module.
+
 Specific help in downloading from SRA can be found [here](https://github.com/langmead-lab/monorail-external/blob/master/sra/README.md)
 
 Additional details for dbGaP are [here](https://github.com/langmead-lab/monorail-external/blob/master/dbgap/README.md)
+
+
+Direct GDC downloads are not currently supported by Monorail-external.  However, following the instructions below you can download the data to a local filesystem separately and then run Monorail-external on the files locally:
 
 Details for downloading from the GDC (TCGA/TARGET) are [here](https://github.com/langmead-lab/monorail-external/blob/master/gdc/README.md)
 
