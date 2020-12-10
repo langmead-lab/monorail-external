@@ -1,8 +1,8 @@
 This page documents the specific issues with downloading dbGaP (protected) data from SRA.
 
-This does NOT cover TCGA/CCLE/TARGET data from the GDC.  That is an entirely separate process covered [here](https://github.com/BenLangmead/jhu-compute/wiki/Download-TCGA-TARGET-CCLE-sequence-data-from-GDC).
+This does NOT cover TCGA/CCLE/TARGET data from the GDC.  That is an entirely separate process covered [here](https://github.com/langmead-lab/monorail-external/blob/master/gdc/README.md).
 
-For the general approach to downloading data from SRA, please see the [Download data from SRA](https://github.com/BenLangmead/jhu-compute/wiki/Download-from-SRA) page first:
+For the general approach to downloading data from SRA, please see the [Download data from SRA](https://github.com/langmead-lab/monorail-external/blob/master/sra/README.md) page first:
 
 
 While the download/convert mechanisms are the same for public and protected data (as documented in the page referenced above), the additional nuances of protected data can potentially add significant trouble to the process.
@@ -64,7 +64,7 @@ The way to do this in a container is to create the "root" path referenced in the
 
 The path will be marked as broken by the filesystem *outside* of the container, but as long as it's valid within the container this is fine.  This path can then separately be mapped via the container to a real filesystem path elsewhere.  
 
-An example of this on MARCC for GTEx is (where `$HOME` is my MARCC home directory):
+An example of this on a local HPC at JHU (MARCC) for GTEx is (where `$HOME` is my MARCC home directory):
 
 `$HOME/ncbi/dbGaP-8716`
 
