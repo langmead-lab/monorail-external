@@ -251,6 +251,15 @@ Taken together, the above junctions block gzipped files & indices along with the
 
 Intermediate and log files for the Unifier run can be found in `run_files`
 
+### Download from SRA/dbGaP/GDC Details
+
+Specific help in downloading from SRA can be found [here](https://github.com/langmead-lab/monorail-external/blob/master/sra/README.md)
+
+Additional details for dbGaP are [here](https://github.com/langmead-lab/monorail-external/blob/master/dbgap/README.md)
+
+Details for downloading from the GDC (TCGA/TARGET) are [here](https://github.com/langmead-lab/monorail-external/blob/master/gdc/README.md)
+
+
 ### [Historical background] Layout of links to recount-pump output for recount-unifier
 
 If compatibility with recount3 gene/exon/junction matrix formats is required, the output of recount-pump needs to be organized in a specific way for the Unifier to properly produce per-study level matrices as in recount3. 
