@@ -27,21 +27,32 @@ SAMPLE_ID_MANIFEST_HOST=$6
 #number of processes to start within container, 10-40 are reasonable depending on the system/run
 NUM_CPUS=$7
 
+#optional, this is used as the project name as well as compilation_id in the jx output, defaults to "sra" and 101 respectively
+#compilation short name (e.g. "sra", "gtex", or "tcga", to be compatible with recount3 outputs) or custom name
+#format: 'project_short_name:project_id', default:'sra:101'
+export PROJECT_SHORT_NAME='sra'
+export PROJECT_ID=101
+export PROJECT_SHORT_NAME_AND_ID=$8
+if [[ -n $PROJECT_SHORT_NAME_AND_ID ]]; then
+    failed_format_check=$(perl -e '$in="'$PROJECT_SHORT_NAME_AND_ID'"; chomp($in); ($p,$pid)=split(/:/,$in); if(length($p) == 0 || $pid!~/^(\d+)$/ || $pid < 100 || $pid > 249) {  print" bad project short name ($p) and/or project ID ($pid) input, format <project_short_name(str)>:project_id(int)> and project_id must be > 100 and < 250, exiting\n"; exit(-1);}')
+    if [[ -n $failed_format_check ]]; then
+        echo $failed_format_check
+        exit -1
+    fi
+    export PROJECT_SHORT_NAME=$(echo $PROJECT_SHORT_NAME_AND_ID | tr ':' \\t | cut -f 1) 
+    export PROJECT_ID=$(echo $PROJECT_SHORT_NAME_AND_ID | tr ':' \\t | cut -f 2) 
+fi
+echo "PROJECT_SHORT_NAME=$PROJECT_SHORT_NAME"
+echo "PROJECT_ID=$PROJECT_ID"
+
 export MULTI_STUDY=1
 #optional, only used if you explicitly want recount-unify to build a single study
 #this is usually true only when you want to skip producing recount3 formatted data
 #e.g. you only want Snaptron-ready output
-SINGLE_STUDY_ONLY=$8
+SINGLE_STUDY_ONLY=$9
 if [[ ! -z $SINGLE_STUDY_ONLY ]]; then
     MULTI_STUDY=
 fi
-
-#optional, this is used as the compilation_id in the jx output, defaults to 0
-export PROJECT_ID=$9
-
-#compilation short name (e.g. "sra", "gtex", or "tcga", to be compatible with recount3 outputs)
-#custom denotes a non-recount project
-export PROJECT_SHORT_NAME='custom'
 
 INPUT_FROM_PUMP_DIR=$WORKING_DIR_HOST/input_from_pump
 mkdir -p $INPUT_FROM_PUMP_DIR

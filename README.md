@@ -185,7 +185,7 @@ An example of the two might be:
 To run the Unifier:
 
 ```
-/bin/bash run_recount_unify.sh /path/to/recount-unifier-singularity.simg <reference_version> /path/to/references /path/to/working/directory /path/to/pump/output /path/to/sample_metadata.tsv <number_cores>
+/bin/bash run_recount_unify.sh /path/to/recount-unifier-singularity.simg <reference_version> /path/to/references /path/to/working/directory /path/to/pump/output /path/to/sample_metadata.tsv <number_cores> <project_short_name:project_id>
 ```
 
 `/path/to/references` here may be the same path as used in recount-pump, but it must contain an additional directory: `<reference_version>_unify`.
@@ -201,6 +201,14 @@ study_id<TAB>sample_id...
 ```
 
 `<study>` and `<sample_id>` can be anything that is unique within the set.
+
+Finally, you (now) must pass in a project short name (string) and a project_id (integer) to be compatible with recount3.
+The project short name should be unique for your organization or 'sra' if you're pulling from the Sequence Read Archive.
+The project_id should also be unique among projects in your organization. The project ID should also be between 100 and 250 (exclusive).
+
+Example:
+
+`sra:101`
 
 If you only want to run one of the 2 steps in the unifier (either gene+exon sums OR junction counts), you can skip the other operation:
 
