@@ -72,6 +72,8 @@ export REF_DIR=/container-mounts/ref
 
 REF_DIR_HOST=$REF_DIR_HOST/$REF"_unify"
 
+export ORGANISM_REF=$REF
+
 #human
 if [[ $REF == 'hg38' ]]; then
     export LIST_OF_ANNOTATIONS='G026,G029,R109,F006,ERCC,SIRV'
@@ -122,5 +124,5 @@ mkdir -p ../run_files
 mv * ../run_files/
 mv ../run_files/ ./
 pushd run_files
-mv ids.tsv junctions.* lucene* samples.* gene_sums_per_study exon_sums_per_study junction_counts_per_study ../
+mv ids.tsv junctions.* lucene* samples.* gene_sums_per_study exon_sums_per_study junction_counts_per_study metadata ../
 popd
