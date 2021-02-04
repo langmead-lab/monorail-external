@@ -13,7 +13,7 @@ container_image=$1
 #run accession (sra, e.g. SRR390728), or internal ID (local), 
 #this can be anything as long as its consistently used to identify the particular sample
 run_acc=$2
-#"local" or the SRA study accession (e.g. SRP020237) if downloading from SRA
+#"local", "copy" (still local), or the SRA study accession (e.g. SRP020237) if downloading from SRA
 study=$3
 #"hg38" (human) or "grcm38" (mouse)
 ref_name=$4
@@ -28,9 +28,16 @@ fp1=$7
 #full file path to second read mates (optional)
 fp2=$8
 
+#if running "local" (or "copy"), then use this to pass the real study name (optional)
+actual_study=$9
+
 #change this if you want a different root path for all the outputs
 #(Docker needs absolute paths to be volume bound in the container)
-root=`pwd`
+if [[ -z $WORKING_DIR ]]; then
+    root=`pwd`
+else
+    root=$WORKING_DIR
+fi
 
 export RECOUNT_JOB_ID=${run_acc}_in0_att0
 
@@ -49,21 +56,33 @@ mkdir -p $RECOUNT_OUTPUT_HOST
 
 export RECOUNT_TEMP=/container-mounts/recount/temp 
 #expects at least $fp1 to be passed in
-if [[ $study == 'local' ]]; then
-    #hard link the input FASTQ(s) into input directory
-    #THIS ASSUMES input files are *on the same filesystem* as the input directory!
-    #this is required for accessing the files in the container
-    ln -f $fp1 $RECOUNT_TEMP_HOST/input/
+if [[ $study == 'local' || $study == 'copy' ]]; then
+    if [[ -z "$actual_study" ]]; then
+        actual_study="LOCAL_STUDY"
+    fi
+
+    if [[ $study == 'local' ]]; then
+        #hard link the input FASTQ(s) into input directory
+        #THIS ASSUMES input files are *on the same filesystem* as the input directory!
+        #this is required for accessing the files in the container
+        ln -f $fp1 $RECOUNT_TEMP_HOST/input/
+    else
+        cp $fp1 $RECOUNT_TEMP_HOST/input/
+    fi
     fp1_fn=$(basename $fp1)
     fp_string="$RECOUNT_TEMP/input/$fp1_fn"
     if [[ ! -z $fp2 ]]; then
-        ln -f $fp2 $RECOUNT_TEMP_HOST/input/
+        if [[ $study == 'local' ]]; then
+            ln -f $fp2 $RECOUNT_TEMP_HOST/input/
+        else
+            cp $fp2 $RECOUNT_TEMP_HOST/input/
+        fi
         fp2_fn=$(basename $fp2)
         fp_string="$RECOUNT_TEMP/input/$fp1_fn;$RECOUNT_TEMP/input/$fp2_fn"
     fi
     #only one run accession per run of this file
     #If you try to list multiple items in a single accessions.txt file you'll get a mixed run which will fail.
-    echo -n "${run_acc},LOCAL_STUDY,${ref_name},local,$fp_string" > ${RECOUNT_INPUT_HOST}/accession.txt
+    echo -n "${run_acc},${actual_study},${ref_name},local,$fp_string" > ${RECOUNT_INPUT_HOST}/accession.txt
 else
     echo -n "${run_acc},${study},${ref_name},sra,${run_acc}" > ${RECOUNT_INPUT_HOST}/accession.txt
 fi
