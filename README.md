@@ -153,7 +153,11 @@ This will keep the first pass alignment BAM, the original FASTQ files, and will 
 
 https://quay.io/repository/broadsword/recount-unify?tab=tags
 
-`1.0.2` is a stable version as of 2020-10-22
+`1.0.4` is a stable version as of 2021-02-08
+
+Run `get_unify_refs.sh <organism_ref_shortname>` to get the appropriate reference related files for the unifier (this is in addition to the reference related files for the pump downloaded above), where `<organism_ref_shortname>` is currently either `hg38` for human or `grcm38` for mouse.
+
+WARNING: the current version of the unifier reference related files *only* work with the recount-unifier image version 1.0.4, earlier versions of the image or the reference related files *will not work* with newer versions of the other.
 
 Follow the same process as for recount-pump (above) to convert to singularity.
 
