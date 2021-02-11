@@ -139,7 +139,7 @@ if [[ "$RU_USER" != "root" ]]; then
     pushd $WORKING_DIR_HOST
     ls | fgrep -v run_files | xargs -I {} mv {} run_files/
     pushd $WORKING_DIR_HOST/run_files
-    mv ids.tsv junctions.* lucene* samples.* gene_sums_per_study exon_sums_per_study junction_counts_per_study $WORKING_DIR_HOST/
+    mv ids.tsv junctions.* lucene* samples.* gene_sums_per_study exon_sums_per_study junction_counts_per_study metadata $WORKING_DIR_HOST/
     popd
     popd
 fi
