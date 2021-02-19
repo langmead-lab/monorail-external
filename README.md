@@ -10,7 +10,7 @@ However, this required a change to the ordering of the final set of exon rows in
 
 These are no longer the same ordering as what's in the current recount3 data release. 
 
-Therefore care must be taking if 3rd party studies run through the Unifier containers associated with this repo (versions >=1.0.4) that are compared directly against studies from the current recount3 data release.  The order of exon features/rows will *not* be the same, so a simple `cbind` operation will not work in R.  A reordering of one or both RSE will be required to make them directly `cbind`able.
+Therefore care must be taking if 3rd party studies' exon sums, run through the Unifier containers associated with this repo (versions >=1.0.4), are compared directly against the current recount3 data release;s exon sums.  The order of exon features/rows will *not* be the same, so a simple `cbind` operation will not work in R.  A reordering of one or both RSE will be required to make them directly `cbind`able.
 
 Any per-study exon sums from 3rd party studies run through the Unifier prior to 1.0.4 should be discarded and not used (not applicable to Snaptron's exon sums).
 
