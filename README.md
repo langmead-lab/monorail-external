@@ -1,5 +1,21 @@
 # monorail-external
 
+## UPDATE 2021-02-08:
+
+A bug was discovered in the Unifier (a.k.a. recount-unify, aggregation) portion of Monorail that affects the aggregation of exon sums into per-study counts loadable with the recount3 package in R/Bioconductor.  This does *not* affect gene or junction counts or Snaptron-related output, nor does this affect the recount-pump (alignment) stage of the processing.
+
+The public recount3 exon sums are correct and the Unifier source code and containers have been fixed as of version 1.0.4.
+
+However, this required a change to the ordering of the final set of exon rows in the per-study exon sum files and related annotation files for 3rd party studies processed by monorail-external (this repo).
+
+These are no longer the same ordering as what's in the current recount3 data release. 
+
+Therefore care must be taking if 3rd party studies run through the Unifier containers associated with this repo (versions >=1.0.4) that are compared directly against studies from the current recount3 data release.  The order of exon features/rows will *not* be the same, so a simple `cbind` operation will not work in R.  A reordering of one or both RSE will be required to make them directly `cbind`able.
+
+Any per-study exon sums from 3rd party studies run through the Unifier prior to 1.0.4 should be discarded and not used (not applicable to Snaptron's exon sums).
+
+## Summary
+
 This is for helping potential users of the Monorail RNA-seq processing pipeline (alignment/quantification) get started running their own data through it.
 
 Caveat emptor: both the Monorail pipeline itself and this repo are a work in process, not the final product.
