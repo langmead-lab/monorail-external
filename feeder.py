@@ -13,11 +13,11 @@ JOB_TAG='skx-normal'
 STARTING_IDX=0
 #JOB_LIST_FILE='gtf.jobs.remaining'
 
-def count_queued(job_tag):
-    return int(subprocess.check_output('squeue -u cwilks | grep %s | wc -l' % job_tag,shell=True))
+def count_queued(job_tag, user='cwilks'):
+    return int(subprocess.check_output('squeue -u %s | grep %s | wc -l' % (user,job_tag),shell=True))
 
-def check_capacity(limit, job_tag):
-    queued = count_queued(job_tag)
+def check_capacity(limit, job_tag, user='cwilks'):
+    queued = count_queued(job_tag, user=user)
     return limit - queued
 
 def submit_job(job_str):
@@ -31,8 +31,14 @@ def submit_new_jobs(capacity, job_str, current_idx):
     return current_idx + capacity
 
 if __name__ == '__main__':
+    user = 'cwilks'
+    if len(sys.argv) > 1:
+        user = sys.argv[1]
+    script = 'job-skx-normal_short.sh' 
+    if len(sys.argv) > 2:
+        script = sys.argv[2]
     while(True):
-        capacity = check_capacity(TOTAL, JOB_TAG)
+        capacity = check_capacity(TOTAL, JOB_TAG, user=user)
         sys.stdout.write("capacity is %d\n" % capacity)
-        current_idx = submit_new_jobs(capacity, 'sbatch job-skx-normal_short.sh', 0)
+        current_idx = submit_new_jobs(capacity, 'sbatch %s' % script, 0)
         time.sleep(TIME_TO_SLEEP)
