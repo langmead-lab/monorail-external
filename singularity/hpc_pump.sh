@@ -7,36 +7,38 @@
 #SBATCH --time=
 
 #requires GNU parallel to run pump intra-node processes
-module load gnuparallel
-module load singularity
 
+module load gnuparallel
+module load tacc-singularity
+
+#e.g. /work/04620/cwilks/monorail-external/singularity
 dir=./
 export IMAGE=/path/to/singularity_cache/recount-rs5-1.0.6.simg
-#e.g. hg38 or grcm38
 export REF=hg38
 #this containers the subdirs hg38 (grcm38) and hg38_unify (grcm38_unify)
 export REFS_DIR=/path/to/refs
-#number of pump processes to run on a single node, default is for Stampede2 Skylakes (96 cores)
 export NUM_PUMP_PROCESSES=16
-#number of cores per pump process
 export NUM_CORES=8
 
 #study name/accession, e.g. ERP001942
 study=$1
 #file with list of runs accessions to process from study
+#e.g. /home1/04620/cwilks/scratch/workshop/SRP096788.runs.txt
 runs_file=$2
 #e.g. /scratch/04620/cwilks/workshop
-export WORKING_DIR=$3
+WORKING_DIR=$3
 
-for f in input output temp temp_big; do mkdir -p $WORKING_DIR/$f ; done
-#set this to whatever your HPC uses for the per-job ID
 JOB_ID=$SLURM_JOB_ID
+export WORKING_DIR=$WORKING_DIR/pump/${study}.${JOB_ID}
+for f in input output temp temp_big; do mkdir -p $WORKING_DIR/$f ; done
+
 #store the log for each job run
 mkdir -p $WORKING_DIR/jobs_run/${JOB_ID}
 
-echo -n "" > $WORKING_DIR/${JOB_ID}.jobs
+echo -n "" > $WORKING_DIR/pump.jobs
 for r in `cat $runs_file`; do
-    echo "/bin/bash -x $dir/run_recount_pump.sh $IMAGE $r $study $REF $NUM_CORES $REFS_DIR > $WORKING_DIR/jobs_run/${JOB_ID}/${r}.${study}.pump.run 2>&1" >> $WORKING_DIR/${JOB_ID}.jobs
+    echo "LD_PRELOAD=/work/00410/huang/share/patch/myopen.so /bin/bash -x $dir/run_recount_pump.sh $IMAGE $r $study $REF $NUM_CORES $REFS_DIR > $WORKING_DIR/${r}.${study}.pump.run 2>&1" >> $WORKING_DIR/pump.jobs
 done
 
-parallel -j $NUM_PUMP_PROCESSES < $WORKING_DIR/${JOB_ID}.jobs
+#ignore failures to get done as many as possible (e.g. don't want to lose the node if only one sub run/sample fails)
+parallel -j $NUM_PUMP_PROCESSES < $WORKING_DIR/pump.jobs || true
