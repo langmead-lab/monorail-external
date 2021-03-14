@@ -15,6 +15,7 @@ REF_DIR_HOST=$3
 
 #full path on host to where we should actually run the unifier
 WORKING_DIR_HOST=$4
+pushd $WORKING_DIR_HOST
 
 #full path on host to where the output from recount-pump resides
 #this needs to be writable by this script!
@@ -109,7 +110,7 @@ export RECOUNT_CPUS=$NUM_CPUS
 #do some munging of the passed in sample IDs + optional metadata files
 sample_id_manfest_fn=$(basename $SAMPLE_ID_MANIFEST_HOST)
 #first copy the full original samples manifest into a directory visible to the container
-cp $SAMPLE_ID_MANIFEST_HOST $WORKING_DIR_HOST/$sample_id_manfest_fn
+rsync -av $SAMPLE_ID_MANIFEST_HOST $WORKING_DIR_HOST/$sample_id_manfest_fn
 export SAMPLE_ID_MANIFEST_HOST_ORIG=$WORKING_DIR_HOST/$sample_id_manfest_fn
 export SAMPLE_ID_MANIFEST_HOST=$WORKING_DIR_HOST/ids.input
 #now cut out just the 1st 2 columns (study, sample_id), expecting a header
