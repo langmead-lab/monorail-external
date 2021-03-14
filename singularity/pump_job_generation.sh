@@ -10,4 +10,4 @@ export WORKING_DIR=$3
 
 for f in input output temp temp_big; do mkdir -p $WORKING_DIR/$f ; done
 
-cat $dir/tacc_pump.sh | sed 's#study=..#study='$study'#' | sed 's#runs_file=..#runs_file='$runs_file'#' | sed 's#WORKING_DIR=..#WORKING_DIR='$WORKING_DIR'#' | sed 's#^dir=..#dir='$dir'#' > tacc_pump.${study}.sh
+cat $dir/tacc_pump.sh | sed 's#^study=..$#study='$study'#' | sed 's#^runs_file=..$#runs_file='$runs_file'#' | sed 's#^WORKING_DIR=..$#WORKING_DIR='$WORKING_DIR'#' | sed 's#^dir=..$#dir='$dir'#' > tacc_pump.${study}.sh
