@@ -9,9 +9,9 @@
 #requires GNU parallel to run pump intra-node processes
 
 module load gnuparallel
-module load tacc-singularity
+module load singularity
 
-#e.g. /work/04620/cwilks/monorail-external/singularity
+#e.g. /path/to/monorail-external/singularity
 dir=./
 export IMAGE=/path/to/singularity_cache/recount-rs5-1.0.6.simg
 export REF=hg38
