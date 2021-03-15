@@ -2,12 +2,17 @@
 #make sure docker is loaded/in $PATH ahead of time
 set -exo pipefail
 
+#For dbGaP runs, define PROTECTED=1 in the running environment (e.g. in bash "export PROTECTED=1")
+#To do genotyping with QC, define SNPS_FILE_FOR_GENOTYPING=$REF_DIR_HOST/path/to/snps.vcf
+#To bypass initial link creation for a rerun, define SKIP_FIND=1
+
 #set RU_USER in environment to a user name you want the unifier run as, other it'll default to root
 #and won't try to move files around at the end (all raw unifier output will be kept at the root of $WORKING_DIR_HOST)
 #typically if you're running in a AWS VM, either "ec2-user" or "ubuntu" should do the trick
 if [[ -z RU_USER ]]; then
     RU_USER=root
 fi
+
 
 #docker only takes the UID, so need to get that locally
 #this won't work for ldap/external user account control
@@ -19,7 +24,7 @@ image_name=$1
 #hg38 or grcm38
 REF=$2
 
-#full path on host to one direcotry above where get_unify_refs.sh deposited its files
+#full path on host to one directory above where get_unify_refs.sh deposited its files
 REF_DIR_HOST=$3
 
 #full path on host to where we should actually run the unifier
@@ -128,7 +133,7 @@ export SAMPLE_ID_MANIFEST_ORIG=$WORKING_DIR/$sample_id_manfest_fn
 
 export ORGANISM_REF=$REF
 
-perl -e 'print "SAMPLE_ID_MANIFEST\nREF_DIR\nSAMPLE_ID_MANIFEST_ORIG\nRECOUNT_CPUS\nWORKING_DIR\nINPUT_DIR\nEXON_BITMASK_COORDS\nEXON_BITMASKS\nREF_SIZES\nREF_FASTA\nGENE_ANNOTATION_MAPPING\nGENE_REJOIN_MAPPING\nEXON_REJOIN_MAPPING\nEXON_COORDINATES_BED\nANNOTATED_JXS\nLIST_OF_ANNOTATIONS\nPROJECT_SHORT_NAME\nPROJECT_ID\nORGANISM_REF\nMULTI_STUDY\nSNPS_FILE_FOR_GENOTYPING";' > $WORKING_DIR_HOST/env.list
+perl -e 'print "SAMPLE_ID_MANIFEST\nREF_DIR\nSAMPLE_ID_MANIFEST_ORIG\nRECOUNT_CPUS\nWORKING_DIR\nINPUT_DIR\nEXON_BITMASK_COORDS\nEXON_BITMASKS\nREF_SIZES\nREF_FASTA\nGENE_ANNOTATION_MAPPING\nGENE_REJOIN_MAPPING\nEXON_REJOIN_MAPPING\nEXON_COORDINATES_BED\nANNOTATED_JXS\nLIST_OF_ANNOTATIONS\nPROJECT_SHORT_NAME\nPROJECT_ID\nORGANISM_REF\nMULTI_STUDY\nSNPS_FILE_FOR_GENOTYPING\nPROTECTED";' > $WORKING_DIR_HOST/env.list
 
 docker run --rm --user $RU_UID --name runifer --env-file $WORKING_DIR_HOST/env.list --volume $INPUT_FROM_PUMP_DIR:$INPUT_DIR --volume $WORKING_DIR_HOST:${WORKING_DIR}:rw --volume $REF_DIR_HOST:${REF_DIR}:rw $image_name /bin/bash -c "source activate recount-unify && /recount-unify/workflow.bash"
 
