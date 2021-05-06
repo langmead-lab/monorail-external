@@ -138,7 +138,7 @@ http://snaptron.cs.jhu.edu/data/temp/SRR390728_125_1.fastq.gz
 http://snaptron.cs.jhu.edu/data/temp/SRR390728_125_2.fastq.gz
 
 ```
-/bin/bash run_recount_pump.sh /path/to/recount-pump-singularity.simg SRR390728 local hg38 20 /path/to/references /path/to/SRR390728_125_1.fastq.gz /path/to/SRR390728_125_2.fastq.gz
+/bin/bash run_recount_pump.sh /path/to/recount-pump-singularity.simg SRR390728 local hg38 20 /path/to/references /path/to/SRR390728_125_1.fastq.gz /path/to/SRR390728_125_2.fastq.gz SRP020237
 ```
 
 This will startup a container, attempt to hardlink the fastq filepaths into a temp directory, and process them using up to 20 CPUs/cores.
@@ -147,6 +147,8 @@ Important: the script assumes that the input fastq files reside on the same file
 
 The 2nd mates file path is optional as is the gzip compression.
 The pipeline uses the `.gz` extension to figure out if gzip compression is being used or not.
+
+The final parameter is the *actual* study name, `SRP020237`, since we're overloading the normal study position with `local`.
 
 ### Additional Options
 
