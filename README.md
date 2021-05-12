@@ -281,6 +281,22 @@ Taken together, the above junctions block gzipped files & indices along with the
 
 Intermediate and log files for the Unifier run can be found in `run_files`
 
+### Loading custom Unifier runs into recount3
+
+recount3 http://bioconductor.org/packages/release/bioc/html/recount3.html requires a specific directory/path/folder layout to be present, either on 1) local filesystem from which the R package can load from or a 2) URL using HTTP (not HTTPS).
+
+An example layout that loads into recount3 is rooted here (DO NOT USE ANY DATA AT THIS URL FOR REAL ANALYSES):
+http://snaptron.cs.jhu.edu/data/temp/recount3test
+
+To load that test custom recount3 root URL (but it could be either URL or local directory) in R after installing the recount3 package:
+
+```library(recount3)
+recount3_cache_rm()
+options(recount3_url = "http://snaptron.cs.jhu.edu/data/temp/recount3test")
+hp<-available_projects()
+rse_gene = create_rse(hp[hp$project == 'ERP001942',])
+```
+
 ### Download from SRA/dbGaP/GDC Details
 
 The following links are prodivded to detail the download operation from various repos including protected data (e.g. dbGaP and GDC).
