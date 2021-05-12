@@ -298,11 +298,32 @@ hp<-available_projects()
 rse_gene = create_rse(hp[hp$project == 'ERP001942',])
 ```
 
-The `gene_sums`, `exon_sums`, and `junctions` directories can be populated by the output of the Unifier (see the layout above).
+The `gene_sums`, `exon_sums`, and `junctions` directories can be populated by the output of the Unifier (see the layout above) using the naming as output by the unifier, expcept in the case of the junctions files where the case of `.all.` and `.unique.` needs to be changed to all upper case for recount3 to work with them (this will be fixed shortly).
+
 The `base_sums` directory can be populated by renamed `*.all.bw` files in the *pump* output, one per sample (the Unifier doesn't do anything with these files).
 
-Annotation files are at these URLs:
-http://duffel.rail.bio/recount3/human/new_annotations
+To populate the `annotation` directories for each organism, the default recount3 annotation files (fixed as of Unifier version 1.0.4 as noted above) are at these URLs:
+
+Human Gencode V26:
+* http://duffel.rail.bio/recount3/human/new_annotations/exon_sums/human.exon_sums.G026.gtf.gz
+* http://duffel.rail.bio/recount3/human/new_annotations/gene_sums/human.gene_sums.G026.gtf.gz
+
+Mouse Gencode V23:
+* http://duffel.rail.bio/recount3/mouse/new_annotations/exon_sums/mouse.exon_sums.M023.gtf.gz
+* http://duffel.rail.bio/recount3/mouse/new_annotations/gene_sums/mouse.gene_sums.M023.gtf.gz
+
+Simply replace `G026` in the URLs above with one or more of the following to get the rest of the annotations (if so desired):
+
+Human:
+* `G029` (Gencode V29)
+* `R109` (RefSeq release 109)
+* `F006` (FANTOM-CAT release 6)
+* `SIRV` (synthetic spike-in alt. splicing isoforms)
+* `ERCC` (synthetic spike-in genes)
+
+Mouse:
+* `SIRV` (synthetic spike-in alt. splicing isoforms)
+* `ERCC` (synthetic spike-in genes)
 
 ### Download from SRA/dbGaP/GDC Details
 
