@@ -298,6 +298,12 @@ hp<-available_projects()
 rse_gene = create_rse(hp[hp$project == 'ERP001942',])
 ```
 
+The `gene_sums`, `exon_sums`, and `junctions` directories can be populated by the output of the Unifier (see the layout above).
+The `base_sums` directory can be populated by renamed `*.all.bw` files in the *pump* output, one per sample (the Unifier doesn't do anything with these files).
+
+Annotation files are at these URLs:
+http://duffel.rail.bio/recount3/human/new_annotations
+
 ### Download from SRA/dbGaP/GDC Details
 
 The following links are prodivded to detail the download operation from various repos including protected data (e.g. dbGaP and GDC).
