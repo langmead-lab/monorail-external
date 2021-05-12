@@ -290,7 +290,8 @@ http://snaptron.cs.jhu.edu/data/temp/recount3test
 
 To load that test custom recount3 root URL (but it could be either URL or local directory) in R after installing the recount3 package:
 
-```library(recount3)
+```
+library(recount3)
 recount3_cache_rm()
 options(recount3_url = "http://snaptron.cs.jhu.edu/data/temp/recount3test")
 hp<-available_projects()
