@@ -248,9 +248,9 @@ to run only junction counts
 
 recount3 compatible sums/counts matrix output directories are in the `/path/to/working/directory` under:
 
-* `gene_sums_per_study`
-* `exon_sums_per_study`
-* `junction_counts_per_study`
+* `gene_sums_per_study` (content goes into `gene_sums` in recount3 layout section below)
+* `exon_sums_per_study` (content goes into `exon_sums` in recount3 layout section below)
+* `junction_counts_per_study` (content goes into `junctions` in recount3 layout section below)
 
 The first 2 are run together and then the junctions are aggregated.
 
@@ -287,6 +287,8 @@ recount3 http://bioconductor.org/packages/release/bioc/html/recount3.html requir
 
 An example layout that loads into recount3 is rooted here (DO NOT USE ANY DATA AT THIS URL FOR REAL ANALYSES):
 http://snaptron.cs.jhu.edu/data/temp/recount3test
+
+You should browse the subdirectories of that URL as an example of how to layout your own custom recount3 data directory hierarchy.
 
 To load that test custom recount3 root URL (but it could be either URL or local directory) in R after installing the recount3 package:
 
