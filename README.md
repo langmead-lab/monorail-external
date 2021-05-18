@@ -1,5 +1,11 @@
 # monorail-external
 
+For convenience, the latest stable verisons of the images are:
+
+* Pump: `1.0.6` (as of 2020-10-20)
+* Unify: `1.0.8` (as of 2021-05-18)
+
+
 ## UPDATE 2021-02-08:
 
 A bug was discovered in the Unifier (a.k.a. recount-unify, aggregation) portion of Monorail that affects the aggregation of exon sums into per-study counts loadable with the recount3 package in R/Bioconductor.  This does *not* affect gene or junction counts or Snaptron-related output, nor does this affect the recount-pump (alignment) stage of the processing.
@@ -171,7 +177,7 @@ This will keep the first pass alignment BAM, the original FASTQ files, and will 
 
 https://quay.io/repository/broadsword/recount-unify?tab=tags
 
-`1.0.4` is a stable version as of 2021-02-08
+`1.0.8` is a stable version as of 2021-05-18
 
 Run `get_unify_refs.sh <organism_ref_shortname>` to get the appropriate reference related files for the unifier (this is in addition to the reference related files for the pump downloaded above), where `<organism_ref_shortname>` is currently either `hg38` for human or `grcm38` for mouse.
 
