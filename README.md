@@ -1,9 +1,9 @@
 # monorail-external
 
-For convenience, the latest stable verisons of the images are:
+For convenience, the latest stable versions of the images are:
 
-* Pump: `1.0.6` (as of 2020-10-20)
-* Unify: `1.0.8` (as of 2021-05-18)
+* Pump: `1.0.6` (as of 2020-10-20) https://quay.io/repository/benlangmead/recount-rs5?tab=tags
+* Unify: `1.0.8` (as of 2021-05-18) https://quay.io/repository/broadsword/recount-unify?tab=tags
 
 
 ## UPDATE 2021-02-08:
