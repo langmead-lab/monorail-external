@@ -345,6 +345,7 @@ Mouse:
 * `SIRV` (synthetic spike-in alt. splicing isoforms)
 * `ERCC` (synthetic spike-in genes)
 
+Finally, the `<data_source>.recount_project.MD.gz` (e.g. `sra.recount_project.MD.gz`) file is cross-study for a given data_source so it falls outside of the running of any given study. If you run another study through Monorail (assuming the same datasource, e.g. "internal" or your own version of `sra`) you'd want to append the new runs/samples to `<data_source>.recount_project.MD.gz` rather than overwrite it as it's the main list of all runs/studies in the data source used by recount3 to load them.
 
 ### Download from SRA/dbGaP/GDC Details
 
