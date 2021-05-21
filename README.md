@@ -291,6 +291,9 @@ Intermediate and log files for the Unifier run can be found in `run_files`
 
 recount3 http://bioconductor.org/packages/release/bioc/html/recount3.html requires a specific directory/path/folder layout to be present, either on 1) local filesystem from which the R package can load from or a 2) URL using HTTP (not HTTPS).
 
+We suggest installing the latest version of the recount3 package direct from github (in R, requires Bioconductor):
+`remotes::install_github("LieberInstitute/recount3")`
+
 An example layout that loads into recount3 is rooted here (DO NOT USE ANY DATA AT THIS URL FOR REAL ANALYSES):
 http://snaptron.cs.jhu.edu/data/temp/recount3test
 
@@ -305,6 +308,15 @@ options(recount3_url = "http://snaptron.cs.jhu.edu/data/temp/recount3test")
 hp<-available_projects()
 rse_gene = create_rse(hp[hp$project == 'ERP001942',])
 ```
+
+You will see warnings about the following metadata files being missing (they'll be errors if on an earlier version of recount3):
+```
+Warning messages:
+1: The 'url' <http://snaptron.cs.jhu.edu/data/temp/recount3test/human/data_sources/sra/metadata/42/ERP001942/sra.recount_seq_qc.ERP001942.MD.gz> does not exist or is not available.
+2: The 'url' <http://snaptron.cs.jhu.edu/data/temp/recount3test/human/data_sources/sra/metadata/42/ERP001942/sra.recount_pred.ERP001942.MD.gz> does not exist or is not available.
+```
+
+This is expected and will happen with your own custom studies as well.  While these files were generated for recount3, they were never part of Monorail proper (i.e. not an automated part). You should still be able to successfully load your custom data into recount3.
 
 The `gene_sums`, `exon_sums`, and `junctions` directories can be populated by the output of the Unifier (see the layout above) using the naming as output by the unifier, expcept in the case of the junctions files where the case of `.all.` and `.unique.` needs to be changed to all upper case for recount3 to work with them (this will be fixed shortly).
 
@@ -332,6 +344,7 @@ Human:
 Mouse:
 * `SIRV` (synthetic spike-in alt. splicing isoforms)
 * `ERCC` (synthetic spike-in genes)
+
 
 ### Download from SRA/dbGaP/GDC Details
 
