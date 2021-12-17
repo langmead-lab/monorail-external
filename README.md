@@ -8,6 +8,7 @@ For convenience, the latest stable versions of the images are:
 Also, the full source for recount (both pump and unify) is now public:
 
 https://github.com/langmead-lab/recount-pump
+
 https://github.com/langmead-lab/recount-unify
 
 
