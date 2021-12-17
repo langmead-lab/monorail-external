@@ -5,8 +5,9 @@ For convenience, the latest stable versions of the images are:
 * Pump: `1.0.6` (as of 2020-10-20) https://quay.io/repository/benlangmead/recount-rs5?tab=tags
 * Unify: `1.0.9` (as of 2021-09-13) https://quay.io/repository/broadsword/recount-unify?tab=tags
 
-Also, the full source for recount-unify is now public:
+Also, the full source for recount (both pump and unify) is now public:
 
+https://github.com/langmead-lab/recount-pump
 https://github.com/langmead-lab/recount-unify
 
 
