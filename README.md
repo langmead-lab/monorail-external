@@ -149,12 +149,12 @@ Example:
 
 Download the following two, tiny FASTQ files:
 
-http://snaptron.cs.jhu.edu/data/temp/SRR390728_125_1.fastq.gz
+http://snaptron.cs.jhu.edu/data/temp/SRR390728_1.fastq.gz
 
-http://snaptron.cs.jhu.edu/data/temp/SRR390728_125_2.fastq.gz
+http://snaptron.cs.jhu.edu/data/temp/SRR390728_2.fastq.gz
 
 ```
-/bin/bash run_recount_pump.sh /path/to/recount-pump-singularity.simg SRR390728 local hg38 20 /path/to/references /path/to/SRR390728_125_1.fastq.gz /path/to/SRR390728_125_2.fastq.gz SRP020237
+/bin/bash run_recount_pump.sh /path/to/recount-pump-singularity.simg SRR390728 local hg38 20 /path/to/references /path/to/SRR390728_1.fastq.gz /path/to/SRR390728_2.fastq.gz SRP020237
 ```
 
 This will startup a container, attempt to hardlink the fastq filepaths into a temp directory, and process them using up to 20 CPUs/cores.
@@ -177,7 +177,7 @@ As of 1.0.5 there is some support for altering how the workflow is run with the 
 An example with all three options using the test local example:
 
 ```
-export KEEP_BAM=1 && export KEEP_FASTQ=1 && export NO_SHARED_MEM=1 && /bin/bash run_recount_pump.sh /path/to/recount-pump-singularity.simg SRR390728 local hg38 20 /path/to/references /path/to/SRR390728_125_1.fastq.gz /path/to/SRR390728_125_2.fastq.gz
+export KEEP_BAM=1 && export KEEP_FASTQ=1 && export NO_SHARED_MEM=1 && /bin/bash run_recount_pump.sh /path/to/recount-pump-singularity.simg SRR390728 local hg38 20 /path/to/references /path/to/SRR390728_1.fastq.gz /path/to/SRR390728_2.fastq.gz
 ```
 
 This will keep the first pass alignment BAM, the original FASTQ files, and will force STAR to be run in NoSharedMemory mode with respect to it's genome index for the first pass alignment.
