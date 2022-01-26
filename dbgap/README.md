@@ -31,6 +31,19 @@ Once imported, it will create a new file in the config directory, e.g.:
 
 Once you've run `vdb-config -i` initially, you can also directly edit the `$HOME/.ncbi/user-settings.mkfg` to at least change paths, despite the warning not to do this.
 
+UPDATE 2022-01-26
+Of critical importance to be able to download and avoiding the `Access denied...` errors as illustrated in the next section, is to ensure that the `$HOME/.ncbi/user-settings.mkfg` file contains something similar to the following for the protected study of interest referenced by your request ID, in our example: `dbGaP-30495` (this is for prefetch ~2.9.x):
+
+```/repository/user/protected/dbGaP-30495/apps/file/volumes/flat = "files"
+/repository/user/protected/dbGaP-30495/apps/sra/volumes/sraFlat = "sra"
+/repository/user/protected/dbGaP-30495/cache-enabled = "true"
+/repository/user/protected/dbGaP-30495/description = "<description of access for this project from your dbGaP My Projects page>"
+/repository/user/protected/dbGaP-30495/download-ticket = "C0DFE10E-D79C-45E3-BCE3-6EB1941EEFFB"
+/repository/user/protected/dbGaP-30495/encryption-key-path = "/home/ubuntu/.ncbi/dbGap-30495.enc_key"
+/repository/user/protected/dbGaP-30495/root = "<desired_download_path>"```
+
+You must have all of those after you initially import the prject `ngc` key
+
 # Determining the correct project filesystem path to download to
 Second, you need to be careful about the filesystem path you download/convert the protected data to/in using `prefetch` and `fastq-dump`.  
 
