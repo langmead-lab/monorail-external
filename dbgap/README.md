@@ -40,7 +40,8 @@ Of critical importance to be able to download and avoiding the `Access denied...
 /repository/user/protected/dbGaP-30495/description = "<description of access for this project from your dbGaP My Projects page>"
 /repository/user/protected/dbGaP-30495/download-ticket = "C0DFE10E-D79C-45E3-BCE3-6EB1941EEFFB"
 /repository/user/protected/dbGaP-30495/encryption-key-path = "/home/ubuntu/.ncbi/dbGap-30495.enc_key"
-/repository/user/protected/dbGaP-30495/root = "<desired_download_path>"```
+/repository/user/protected/dbGaP-30495/root = "<desired_download_path>"
+```
 
 You must have all of those after you initially import the prject `ngc` key
 
