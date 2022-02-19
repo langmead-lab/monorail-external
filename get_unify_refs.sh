@@ -48,4 +48,25 @@ fi
 #need to add a header to the exons file and gzip it
 #slight misnomer in the header, "gene" is really "chromosome" but leave for backwards compatibility
 cat <(echo "gene	start	end	name	score	strand") ../${org}/gtf/exons.bed | gzip > exons.w_header.bed.gz
+
+#finally, grab per-annotation ordering and default annotation disjoin-exon-per-gene BED file for post-run resum check
+annotations="G026 G029 R109 F006 ERCC SIRV"
+default="G026"
+if [[ $org == "grcm38" ]]; then
+    annotations="M023 ERCC SIRV"
+    default="M023"
+fi
+if [[ ! -e disjoint2exons2genes.${default}.sorted.cut.bed ]]; then
+    wget https://recount-ref.s3.amazonaws.com/${org}_unify/disjoint2exons2genes.${default}.sorted.cut.bed.gz
+    gunzip disjoint2exons2genes.${default}.sorted.cut.bed.gz
+fi
+for f in $annotations; do
+    f="${f}.gene_sums.gene_order.tsv.gz"
+    unzipped=$(echo $f | sed 's/\.gz$//')
+    if [[ ! -e "$unzipped" ]]; then
+        wget https://recount-ref.s3.amazonaws.com/${org}_unify/$f
+        gunzip $f
+    fi
+done
+
 popd
