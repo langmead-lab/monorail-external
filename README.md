@@ -3,9 +3,12 @@
 For convenience, the latest stable versions of the images are:
 
 * Pump: `1.0.6` (as of 2020-10-20) https://quay.io/repository/benlangmead/recount-rs5?tab=tags
-* Unify: `1.0.9` (as of 2021-09-13) https://quay.io/repository/broadsword/recount-unify?tab=tags
+* Unify: `1.1.0` (as of 2022-02-19) https://quay.io/repository/broadsword/recount-unify?tab=tags
 
-Also, the full source for recount (both pump and unify) is now public:
+We *strongly* suggest all users update their Unify image to 1.1.0 (or later) due to the Rejoin gene collision bug fixed on 2022-02-18.
+Also, any studies unified with Unifier images from before that date should be re-unified with the updated image (SHA256 2a1b0cfa005a or later).
+
+The full source for recount (both pump and unify) is now public:
 
 https://github.com/langmead-lab/recount-pump
 
@@ -14,21 +17,6 @@ https://github.com/langmead-lab/recount-unify
 If you find Monorail and/or recount3 useful, please cite this paper:
 
 Wilks, C., Zheng, S.C., Chen, F.Y. et al. recount3: summaries and queries for large-scale RNA-seq expression and splicing. Genome Biol 22, 323 (2021). https://doi.org/10.1186/s13059-021-02533-6
-
-
-## UPDATE 2021-02-08:
-
-A bug was discovered in the Unifier (a.k.a. recount-unify, aggregation) portion of Monorail that affects the aggregation of exon sums into per-study counts loadable with the recount3 package in R/Bioconductor.  This does *not* affect gene or junction counts or Snaptron-related output, nor does this affect the recount-pump (alignment) stage of the processing.
-
-The public recount3 exon sums are correct and the Unifier source code and containers have been fixed as of version 1.0.4.
-
-However, this required a change to the ordering of the final set of exon rows in the per-study exon sum files and related annotation files for 3rd party studies processed by monorail-external (this repo).
-
-These are no longer the same ordering as what's in the current recount3 data release. 
-
-Therefore care must be taking if 3rd party studies' exon sums, run through the Unifier containers associated with this repo (versions >=1.0.4), are compared directly against the current recount3 data release;s exon sums.  The order of exon features/rows will *not* be the same, so a simple `cbind` operation will not work in R.  A reordering of one or both RSE will be required to make them directly `cbind`able.
-
-Any per-study exon sums from 3rd party studies run through the Unifier prior to 1.0.4 should be discarded and not used (not applicable to Snaptron's exon sums).
 
 ## Summary
 
