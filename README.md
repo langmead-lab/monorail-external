@@ -10,6 +10,9 @@ Also, any studies unified with Unifier images from before that date should be re
 Please see:
 https://github.com/langmead-lab/monorail-external/tree/master/fixes#rejoin-gene-collision-fix-2022-02-19
 
+If you do use the Unifier as of 1.1.0, please ensure you have all additional reference-related files as well, as these were expanded with that release:
+https://github.com/langmead-lab/monorail-external/commit/646c59124d546da63cbb73356273bb174b2a63ea
+
 The full source for recount (both pump and unify) is now public:
 
 https://github.com/langmead-lab/recount-pump
