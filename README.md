@@ -227,7 +227,11 @@ study_id<TAB>sample_id...
 ...
 ```
 
-`<study>` and `<sample_id>` can be anything that is unique within the set.
+`<study_id>` and `<sample_id>` can be anything that is unique within the set, however, `<study_id>` must match what the study was when `recount-pump` was run, or the filenames of the output files from pump must be changed to reflect the different `<study_id>`, e.g.
+
+pump file prefix: `'ERR248710!ERP002416!grcm38!sra'`
+
+either run with `<study_id>` set to `ERP002416` or change all the filenames to have the prefix `'ERR248710!<new_study_id>!grcm38!sra'` for all affected samples.
 
 Finally, you (now) must pass in a project short name (string) and a project_id (integer) to be compatible with recount3.
 The project short name should be unique for your organization or 'sra' if you're pulling from the Sequence Read Archive.
