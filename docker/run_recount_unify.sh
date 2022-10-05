@@ -94,7 +94,7 @@ if [[ $REF == 'hg38' ]]; then
 #mouse
 else 
     if [[ $REF == 'grcm38' ]]; then
-        export LIST_OF_ANNOTATIONS='M023,ERCC,SIRV'a
+        export LIST_OF_ANNOTATIONS='M023,ERCC,SIRV'
     else
         echo "ERROR: unrecognized organism: $REF, exiting"
         exit
