@@ -31,6 +31,20 @@ fp2=$8
 #if running "local" (or "copy"), then use this to pass the real study name (optional)
 actual_study=$9
 
+#RECOUNT_TEMP_BIG: for older versions of sratoolkit/prefetch, you can override the RECOUNT_TEMP_BIG env var to ensure
+#prefetch downloads happen relative to a vdb-config path to ensure authorization
+#OR for dbgap, set DBGAP_PATH to container-related path with authorized dbgap subdir
+#e.g. export DBGAP_PATH=/container-mounts/dbGaP-28411
+if [[ -n $DBGAP_PATH ]]; then
+    export RECOUNT_TEMP_BIG=$DBGAP_PATH/temp_big
+    export RECOUNT_TEMP=$DBGAP_PATH/temp
+fi
+
+#if overriding pump Snakemake parameters (see recount-pump/workflow/rs5/workflow.bash comments)
+#set CONFIGFILE=/container/reachable/path/to/config.json
+#if using a different version of sratoolkit than what's in the base recount-pump container
+#you will need to set the VDB_CONFIG to a container reachable path for this sratoolkit's version of user-settings.mkfg is located
+
 #change this if you want a different root path for all the outputs
 #(Docker needs absolute paths to be volume bound in the container)
 if [[ -z $WORKING_DIR ]]; then
@@ -54,7 +68,10 @@ mkdir -p $RECOUNT_TEMP_HOST/input
 mkdir -p $RECOUNT_INPUT_HOST
 mkdir -p $RECOUNT_OUTPUT_HOST
 
-export RECOUNT_TEMP=/container-mounts/recount/temp 
+if [[ -z $RECOUNT_TEMP ]]; then
+    export RECOUNT_TEMP=/container-mounts/recount/temp 
+fi
+
 #expects at least $fp1 to be passed in
 if [[ $study == 'local' || $study == 'copy' ]]; then
     if [[ -z "$actual_study" ]]; then
@@ -95,14 +112,29 @@ export RECOUNT_CPUS=$num_cpus
 
 export RECOUNT_TEMP_BIG_HOST=$root/temp_big/${run_acc}_att0
 mkdir -p $RECOUNT_TEMP_BIG_HOST
-export RECOUNT_TEMP_BIG=/container-mounts/recount/temp_big
+if [[ -z $RECOUNT_TEMP_BIG ]]; then
+    export RECOUNT_TEMP_BIG=/container-mounts/recount/temp_big
+fi
+
+    
 
 use_singularity=$(perl -e 'print "1\n" if("'$container_image'"=~/(\.sif$)|(\.simg$)/);')
-
+if [[ -z $CONFIGFILE ]]; then
+    CONFIGFILE=""
+fi
 if [[ -z $use_singularity ]]; then
     echo "running Docker"
-    docker run --rm -e RECOUNT_INPUT -e RECOUNT_OUTPUT -e RECOUNT_REF -e RECOUNT_TEMP -e RECOUNT_TEMP_BIG -e RECOUNT_CPUS -e KEEP_BAM -e KEEP_FASTQ -e KEEP_UNMAPPED_FASTQ -e NO_SHARED_MEM -v $RECOUNT_REF_HOST:$RECOUNT_REF -v $RECOUNT_TEMP_BIG_HOST:$RECOUNT_TEMP_BIG -v $RECOUNT_TEMP_HOST:$RECOUNT_TEMP -v $RECOUNT_INPUT_HOST:$RECOUNT_INPUT -v $RECOUNT_OUTPUT_HOST:$RECOUNT_OUTPUT --name recount-pump $container_image
+    if [[ -n $DBGAP_MOUNT ]]; then
+        extra=" -v $DBGAP_MOUNT:$DBGAP_MOUNT"
+    fi
+    if [[ -n $DOCKER_USER ]]; then
+        DOCKER_USER="--user $DOCKER_USER"
+    fi
+    docker run $DOCKER_USER --rm -e VDB_CONFIG -e RECOUNT_INPUT -e RECOUNT_OUTPUT -e RECOUNT_REF -e RECOUNT_TEMP -e RECOUNT_TEMP_BIG -e RECOUNT_CPUS -e KEEP_BAM -e KEEP_FASTQ -e KEEP_UNMAPPED_FASTQ -e NO_SHARED_MEM -e CONFIGFILE -v $RECOUNT_REF_HOST:$RECOUNT_REF -v $RECOUNT_TEMP_BIG_HOST:$RECOUNT_TEMP_BIG -v $RECOUNT_TEMP_HOST:$RECOUNT_TEMP -v $RECOUNT_INPUT_HOST:$RECOUNT_INPUT -v $RECOUNT_OUTPUT_HOST:$RECOUNT_OUTPUT $extra --name recount-pump${run_acc} $container_image
 else
     echo "running Singularity"
-    singularity exec -B $RECOUNT_REF_HOST:$RECOUNT_REF -B $RECOUNT_TEMP_BIG_HOST:$RECOUNT_TEMP_BIG -B $RECOUNT_TEMP_HOST:$RECOUNT_TEMP -B $RECOUNT_INPUT_HOST:$RECOUNT_INPUT -B $RECOUNT_OUTPUT_HOST:$RECOUNT_OUTPUT $container_image /bin/bash -x -c "source activate recount && /startup.sh && /workflow.bash"
+    if [[ -n $DBGAP_MOUNT ]]; then
+        extra=" -B $DBGAP_MOUNT:$DBGAP_MOUNT"
+    fi
+    singularity exec -B $RECOUNT_REF_HOST:$RECOUNT_REF -B $RECOUNT_TEMP_BIG_HOST:$RECOUNT_TEMP_BIG -B $RECOUNT_TEMP_HOST:$RECOUNT_TEMP -B $RECOUNT_INPUT_HOST:$RECOUNT_INPUT -B $RECOUNT_OUTPUT_HOST:$RECOUNT_OUTPUT $extra $container_image /bin/bash -x -c "source activate recount && /startup.sh && /workflow.bash"
 fi
