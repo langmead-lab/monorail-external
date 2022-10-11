@@ -119,7 +119,7 @@ will result in a Singularity image file in the current working directory:
 
 `recount-rs5-1.0.6.simg`
 
-If using the Docker version of the `recount-pump` image, you would just supply the full image URI + version, e.g.: in the pump commands below instead of the path to the singularity file, e.g. `quay.io/benlangmead/recount-rs5:1.0.6` instead of `/path/to/recount-pump-singularity.simg`.
+If using the Docker version of the `recount-pump` image, supply the docker URI+version in the pump commands below instead of the path to the singularity file, e.g. `quay.io/benlangmead/recount-rs5:1.0.6` instead of `/path/to/recount-pump-singularity.simg`.
 
 NOTE: any host filesystem path mapped into a running container *must not* be a symbolic link, as the symlink will not be able to be followed within the container.
 
