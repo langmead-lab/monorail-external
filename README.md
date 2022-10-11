@@ -119,9 +119,12 @@ will result in a Singularity image file in the current working directory:
 
 `recount-rs5-1.0.6.simg`
 
+If using the Docker version of the `recount-pump` image, you would just supply the full image URI + version, e.g.: in the pump commands below instead of the path to the singularity file, e.g. `quay.io/benlangmead/recount-rs5:1.0.6` instead of `/path/to/recount-pump-singularity.simg`.
+
 NOTE: any host filesystem path mapped into a running container *must not* be a symbolic link, as the symlink will not be able to be followed within the container.
 
 Also, you will need to set the `$RECOUNT_HOST_REF` path in the script to where ever you download/build the relevant reference indexes (see below for more details).
+
 
 ### SRA input
 
@@ -135,6 +138,7 @@ The `/path/to/references` is the full path to whereever the appropriate referenc
 Note: this path should not include the final subdirectory named for the reference version e.g. `hg38` or `grcm38`.
 
 This will startup a container, download the SRR390728 run accession (paired) from the study SRP020237 using upto 10 CPUs/cores.
+
 
 ### Local input
 
