@@ -4,7 +4,7 @@ For a record of recent changes, please see the [CHANGELOG](https://github.com/la
 
 For convenience, the latest stable versions of the images are:
 
-* Pump: `1.1.0` (as of 2022-10-11) https://quay.io/broadsword/recount-pump?tab=tags
+* Pump: `1.1.1` (as of 2022-10-12) https://quay.io/broadsword/recount-pump?tab=tags
 * Unify: `1.1.1` (as of 2022-10-05) https://quay.io/repository/broadsword/recount-unify?tab=tags
 
 We *strongly* suggest all users update their Unify image to 1.1.0 (or later) due to the rejoin gene collision bug fixed on 2022-02-19.
@@ -358,18 +358,22 @@ Finally, the `<data_source>.recount_project.MD.gz` (e.g. `sra.recount_project.MD
 
 ### Download from SRA/dbGaP/GDC Details
 
-The following links are prodivded to detail the download operation from various repos including protected data (e.g. dbGaP and GDC).
+Monorail already downloads from SRA automatically if given an SRA accession, however for dbGaP protected downloads:
 
-Monorail already performs the SRA, and if properly setup, the dbGaP downloads as part of it's built-in downloader module.
-
-Specific help in downloading from SRA can be found [here](https://github.com/langmead-lab/monorail-external/blob/master/sra/README.md)
-
-Additional details for dbGaP are [here](https://github.com/langmead-lab/monorail-external/blob/master/dbgap/README.md)
+* Need to have the study-specific dbGaP key file (`prj_<study_id>.ngc`)
+* Have the key file in a container accessible path (e.g. `/path/to/monorail/refs/.ncbi/`)
+* Specify this as an environmental variable before running `run_recount_pump.sh`: `export NGC=/container-mounts/recount/ref/.ncbi/prj_<study_id>.ngc`
 
 
 Direct GDC downloads are not currently supported by Monorail-external.  However, following the instructions below you can download the data to a local filesystem separately and then run Monorail-external on the files locally:
 
 Details for downloading from the GDC (TCGA/TARGET) are [here](https://github.com/langmead-lab/monorail-external/blob/master/gdc/README.md)
+
+Pre-SRAToolKit 3.0.0 info for SRA and dbGaP downloads:
+
+Specific help in downloading from SRA can be found [here](https://github.com/langmead-lab/monorail-external/blob/master/sra/README.md)
+
+Additional details for dbGaP are [here](https://github.com/langmead-lab/monorail-external/blob/master/dbgap/README.md)
 
 
 ### [Historical background] Layout of links to recount-pump output for recount-unifier
