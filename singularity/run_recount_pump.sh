@@ -2,6 +2,12 @@
 umask 0077
 export PERL5LIB=
 
+#if running a sample from dbGaP (hosted by SRA), you must
+#use >=recount-pump:1.1.1 and you'll need to provide the path to the key file (*.ngc)
+#via the NGC environmental variable, e.g.: 
+#export NGC=/container-mounts/recount/ref/.ncbi/prj_<study_id>.ngc
+#where /container-mounts/recount/ref is the *within* container path to the same path as $ref_path below 
+
 #this script will automatically attempt to determine whether Singularity or Docker should be run
 #based on whether or not the argument to $container_image image below has a ".simg" or a ".sif" suffix
 #if not, it will run Docker
@@ -30,15 +36,6 @@ fp2=$8
 
 #if running "local" (or "copy"), then use this to pass the real study name (optional)
 actual_study=$9
-
-#RECOUNT_TEMP_BIG: for older versions of sratoolkit/prefetch, you can override the RECOUNT_TEMP_BIG env var to ensure
-#prefetch downloads happen relative to a vdb-config path to ensure authorization
-#OR for dbgap, set DBGAP_PATH to container-related path with authorized dbgap subdir
-#e.g. export DBGAP_PATH=/container-mounts/dbGaP-28411
-if [[ -n $DBGAP_PATH ]]; then
-    export RECOUNT_TEMP_BIG=$DBGAP_PATH/temp_big
-    export RECOUNT_TEMP=$DBGAP_PATH/temp
-fi
 
 #if overriding pump Snakemake parameters (see recount-pump/workflow/rs5/workflow.bash comments)
 #set CONFIGFILE=/container/reachable/path/to/config.json
@@ -116,25 +113,20 @@ if [[ -z $RECOUNT_TEMP_BIG ]]; then
     export RECOUNT_TEMP_BIG=/container-mounts/recount/temp_big
 fi
 
-    
-
 use_singularity=$(perl -e 'print "1\n" if("'$container_image'"=~/(\.sif$)|(\.simg$)/);')
 if [[ -z $CONFIGFILE ]]; then
     CONFIGFILE=""
 fi
 if [[ -z $use_singularity ]]; then
     echo "running Docker"
-    if [[ -n $DBGAP_MOUNT ]]; then
-        extra=" -v $DBGAP_MOUNT:$DBGAP_MOUNT"
-    fi
     if [[ -n $DOCKER_USER ]]; then
         DOCKER_USER="--user $DOCKER_USER"
+    fi
+    if [[ -n $NGC ]]; then
+        extra="-e NGC $extra"
     fi
     docker run $DOCKER_USER --rm -e VDB_CONFIG -e RECOUNT_INPUT -e RECOUNT_OUTPUT -e RECOUNT_REF -e RECOUNT_TEMP -e RECOUNT_TEMP_BIG -e RECOUNT_CPUS -e KEEP_BAM -e KEEP_FASTQ -e KEEP_UNMAPPED_FASTQ -e NO_SHARED_MEM -e CONFIGFILE -v $RECOUNT_REF_HOST:$RECOUNT_REF -v $RECOUNT_TEMP_BIG_HOST:$RECOUNT_TEMP_BIG -v $RECOUNT_TEMP_HOST:$RECOUNT_TEMP -v $RECOUNT_INPUT_HOST:$RECOUNT_INPUT -v $RECOUNT_OUTPUT_HOST:$RECOUNT_OUTPUT $extra --name recount-pump${run_acc} $container_image
 else
     echo "running Singularity"
-    if [[ -n $DBGAP_MOUNT ]]; then
-        extra=" -B $DBGAP_MOUNT:$DBGAP_MOUNT"
-    fi
     singularity exec -B $RECOUNT_REF_HOST:$RECOUNT_REF -B $RECOUNT_TEMP_BIG_HOST:$RECOUNT_TEMP_BIG -B $RECOUNT_TEMP_HOST:$RECOUNT_TEMP -B $RECOUNT_INPUT_HOST:$RECOUNT_INPUT -B $RECOUNT_OUTPUT_HOST:$RECOUNT_OUTPUT $extra $container_image /bin/bash -x -c "source activate recount && /startup.sh && /workflow.bash"
 fi
