@@ -13,24 +13,24 @@ pushd ${org}_unify
 for f in disjoint2exons.bed.gz disjoint2exons2genes.bed.gz disjoint2exons2genes.rejoin_genes.bed.gz recount_pump.chr_sizes.tsv.gz blank_exon_sums.gz exon_bitmasks.tsv.gz exon_bitmask_coords.tsv.gz ; do
     unzipped=$(echo $f | sed 's/\.gz$//')
     if [[ ! -e "$unzipped" ]]; then
-        wget https://recount-ref.s3.amazonaws.com/${org}_unify/$f
+        wget https://genome-idx.s3.amazonaws.com/recount/recount-ref/${org}_unify/$f
         gunzip $f
     fi
 done
 
 #get rows counts for Unify post-run validation
-wget https://recount-ref.s3.amazonaws.com/${org}_unify/gene_exon_annotation_row_counts.tsv
+wget https://genome-idx.s3.amazonaws.com/recount/recount-ref/${org}_unify/gene_exon_annotation_row_counts.tsv
 
 #next get list of annotated jx's which is separate the main annotations used in recount-pump
 #annotated junctions stay gzipped
-wget https://recount-ref.s3.amazonaws.com/${org}_unify/annotated_junctions.tsv.gz
+wget https://genome-idx.s3.amazonaws.com/recount/recount-ref/${org}_unify/annotated_junctions.tsv.gz
 
 #now get genome ref FASTA file, this is part of the recount-pump refs
 #so just get it from there
 if [[ ! -e ../${org}/fasta/genome.fa ]]; then
     mkdir -p ../${org}
     pushd ../${org}
-    wget https://recount-ref.s3.amazonaws.com/${org}/fasta.tar.gz
+    wget https://genome-idx.s3.amazonaws.com/recount/recount-ref/${org}/fasta.tar.gz
     tar -zxvf fasta.tar.gz
     popd
 fi
@@ -41,7 +41,7 @@ ln -f ../${org}/fasta/genome.fa recount_pump.fa
 if [[ ! -e ../${org}/gtf/exons.bed ]]; then
     mkdir -p ../${org}
     pushd ../${org}
-    wget https://recount-ref.s3.amazonaws.com/${org}/gtf.tar.gz
+    wget https://genome-idx.s3.amazonaws.com/recount/recount-ref/${org}/gtf.tar.gz
     tar -zxvf gtf.tar.gz
     popd
 fi
@@ -57,14 +57,14 @@ if [[ $org == "grcm38" ]]; then
     default="M023"
 fi
 if [[ ! -e disjoint2exons2genes.${default}.sorted.cut.bed ]]; then
-    wget https://recount-ref.s3.amazonaws.com/${org}_unify/disjoint2exons2genes.${default}.sorted.cut.bed.gz
+    wget https://genome-idx.s3.amazonaws.com/recount/recount-ref/${org}_unify/disjoint2exons2genes.${default}.sorted.cut.bed.gz
     gunzip disjoint2exons2genes.${default}.sorted.cut.bed.gz
 fi
 for f in $annotations; do
     f="${f}.gene_sums.gene_order.tsv.gz"
     unzipped=$(echo $f | sed 's/\.gz$//')
     if [[ ! -e "$unzipped" ]]; then
-        wget https://recount-ref.s3.amazonaws.com/${org}_unify/$f
+        wget https://genome-idx.s3.amazonaws.com/recount/recount-ref/${org}_unify/$f
         gunzip $f
     fi
 done
