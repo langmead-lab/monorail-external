@@ -4,7 +4,7 @@ For a record of recent changes, please see the [CHANGELOG](https://github.com/la
 
 For convenience, the latest stable versions of the images are:
 
-* Pump: `1.1.1` (as of 2022-10-12) https://quay.io/broadsword/recount-pump?tab=tags
+* Pump: `1.1.3` (as of 2023-06-03) https://quay.io/broadsword/recount-pump?tab=tags
 * Unify: `1.1.1` (as of 2022-10-05) https://quay.io/repository/broadsword/recount-unify?tab=tags
 
 We *strongly* suggest all users update their Unify image to 1.1.0 (or later) due to the rejoin gene collision bug fixed on 2022-02-19.
