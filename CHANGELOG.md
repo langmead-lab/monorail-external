@@ -1,5 +1,14 @@
 # CHANGELOG for all things Monorail
 
+# 20230603
+update recount-pump `download.sh` (yet again) to use sratoolkit 3.0.2 for *both* prefetch *and* fastq-dump.
+
+The SRA file extension `.sralite` is now supported (beyond just the `.sra` file).
+
+Outputs should still be backwards compatible with previous Pump runs, so no need to re-run Pump runs from before this.
+
+Pump image now at 1.1.3
+
 # 20221012
 updated recount-pump `download.sh` (again) to use 1) sratoolkit 3.0.0 *for downloading via prefetch* to fix issues with dbGaP in 2.11.2
 
