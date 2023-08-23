@@ -25,6 +25,8 @@ If you find Monorail and/or recount3 useful, please cite this paper:
 
 Wilks, C., Zheng, S.C., Chen, F.Y. et al. recount3: summaries and queries for large-scale RNA-seq expression and splicing. Genome Biol 22, 323 (2021). https://doi.org/10.1186/s13059-021-02533-6
 
+@davemcg has graciously made public both his (notes/example)[https://github.com/langmead-lab/monorail-external/issues/10] and a Snakemake (script)[https://github.com/davemcg/Snakerail] he uses to run monorail which works around some existing issues with the current implementation.  We don't control (or specifically support) any of that, so use at your own risk.
+
 ## Summary
 
 This is for helping potential users of the Monorail RNA-seq processing pipeline (alignment/quantification) get started running their own data through it.
