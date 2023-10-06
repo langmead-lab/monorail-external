@@ -31,7 +31,8 @@ ref_path=$6
 
 #full file path to first read mates (optional)
 fp1=$7
-#full file path to second read mates (optional)
+#full file path to second read mates (optional, if not using a 2nd read file but want to set actual_study below, just set to same
+#value as fp1
 fp2=$8
 
 #if running "local" (or "copy"), then use this to pass the real study name (optional)
@@ -85,7 +86,7 @@ if [[ $study == 'local' || $study == 'copy' ]]; then
     fi
     fp1_fn=$(basename $fp1)
     fp_string="$RECOUNT_TEMP/input/$fp1_fn"
-    if [[ ! -z $fp2 ]]; then
+    if [[ ! -z $fp2  && $fp2 != $fp1 ]]; then
         if [[ $study == 'local' ]]; then
             ln -f $fp2 $RECOUNT_TEMP_HOST/input/
         else
@@ -113,6 +114,8 @@ if [[ -z $RECOUNT_TEMP_BIG ]]; then
     export RECOUNT_TEMP_BIG=/container-mounts/recount/temp_big
 fi
 
+export KEEP_BAM=1
+
 use_singularity=$(perl -e 'print "1\n" if("'$container_image'"=~/(\.sif$)|(\.simg$)/);')
 if [[ -z $CONFIGFILE ]]; then
     CONFIGFILE=""
@@ -125,6 +128,12 @@ if [[ -z $use_singularity ]]; then
     if [[ -n $NGC ]]; then
         extra="-e NGC $extra"
     fi
+    #shared memory flag for all docker containers sharing the host's shared memory
+    if [[ -z $NO_SHARED_MEM ]]; then
+    	extra=${extra}" --ipc=host"
+    fi
+    #maybe needed for aarch64 run
+    #DOCKER_USER="--user root"
     docker run $DOCKER_USER --rm -e VDB_CONFIG -e RECOUNT_INPUT -e RECOUNT_OUTPUT -e RECOUNT_REF -e RECOUNT_TEMP -e RECOUNT_TEMP_BIG -e RECOUNT_CPUS -e KEEP_BAM -e KEEP_FASTQ -e KEEP_UNMAPPED_FASTQ -e NO_SHARED_MEM -e CONFIGFILE -v $RECOUNT_REF_HOST:$RECOUNT_REF -v $RECOUNT_TEMP_BIG_HOST:$RECOUNT_TEMP_BIG -v $RECOUNT_TEMP_HOST:$RECOUNT_TEMP -v $RECOUNT_INPUT_HOST:$RECOUNT_INPUT -v $RECOUNT_OUTPUT_HOST:$RECOUNT_OUTPUT $extra --name recount-pump${run_acc} $container_image
 else
     echo "running Singularity"
