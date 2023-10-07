@@ -4,7 +4,7 @@ For a record of recent changes, please see the [CHANGELOG](https://github.com/la
 
 For convenience, the latest stable versions of the images are:
 
-* Pump: `1.1.1` (as of 2022-10-12) https://quay.io/broadsword/recount-pump?tab=tags
+* Pump: `1.1.3` (as of 2023-06-03) https://quay.io/broadsword/recount-pump?tab=tags
 * Unify: `1.1.1` (as of 2022-10-05) https://quay.io/repository/broadsword/recount-unify?tab=tags
 
 We *strongly* suggest all users update their Unify image to 1.1.0 (or later) due to the rejoin gene collision bug fixed on 2022-02-19.
@@ -24,6 +24,10 @@ https://github.com/langmead-lab/recount-unify
 If you find Monorail and/or recount3 useful, please cite this paper:
 
 Wilks, C., Zheng, S.C., Chen, F.Y. et al. recount3: summaries and queries for large-scale RNA-seq expression and splicing. Genome Biol 22, 323 (2021). https://doi.org/10.1186/s13059-021-02533-6
+
+While we don't control (or specifically support) the following, users may find it useful:
+
+David McGaughey (@davemcg) has graciously made public both [notes/example](https://github.com/langmead-lab/monorail-external/issues/10) and a wrapper Snakemake [script](https://github.com/davemcg/Snakerail) to run monorail, which works around some existing issues with the current implementation.  
 
 ## Summary
 
