@@ -10,7 +10,7 @@ Due to a bug in the rejoin code in the recount/monorail unifier there are a subs
 
 List of genes affected by study for all human annotations:
 
-http://stingray.cs.jhu.edu/data/recount3_rejoin_fix_notes/all_studies.genes_affected.final.tsv.gz
+http://snaptron.cs.jhu.edu/data/recount3_rejoin_fix_notes/all_studies.genes_affected.final.tsv.gz
 
 We strongly urge anyone using recount3 to flush their cache (if not done already after 2022-02-19) and re-run any analyses that involved the affected human genes in the affected studies in recount3 (does not affect exon or junction level counts):
 
