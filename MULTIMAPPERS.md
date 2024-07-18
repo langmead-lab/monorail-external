@@ -28,7 +28,7 @@ In recount3, multimappers are handled the way STAR 2.7.3a handles them. From the
 
 Also from the STAR manual: "By default, the order of the multi-mapping alignments for each read is not truly random. The --outMultimapperOrder Random option outputs multiple alignments for each read in random order, and also randomizes the choice of the primary alignment from the highest scoring alignments."  However, the `--outMultimapperOrder Old_2.4` parameter was specified for Monorail when generating recount3 data not `Random`.
 
-For reference, the STAR 2.7.3a parameters used to generate recount3 data by Monorail are [here](https://github.com/langmead-lab/recount-pump/blob/730e6ae3f688d92bc7acb729174ca4a96889dd57/workflow/rs5lite/Snakefile#L625-L644).
+For reference, the STAR 2.7.3a parameters used to generate recount3 data by Monorail are [here](https://github.com/langmead-lab/recount-pump/blob/d2a0327a8c344fa8edc088cf2ae73e85390deab3/workflow/rs5/Snakefile#L891-L910).
 All other STAR parameters were left at STAR 2.7.3a's default, e.g. `--alignSJoverhangMin` is 5 by default in that version (for splice junction calling in STAR).
 
 Reads which have a primary and one or more secondary alignments are still included by Megadepth (used to generate bigwigs in recount3 but not in recount2), but only the primary alignment is counted in the coverage sum, as the secondary alignments are excluded from consideration. However, this is not exactly the same thing as only counting unique alignments, as that would mean also filtering out the *primary* alignments of those reads which also have secondary alignments which *is not* done for the recount3 bigwigs by Megadepth.
