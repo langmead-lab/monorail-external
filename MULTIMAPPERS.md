@@ -39,7 +39,7 @@ Fully unique bigwigs, those which only count primary alignments from those reads
 
 The STAR aligner calls splice junctions from reads which are align (split) across one or more potential splice junctions using both canonical and non-canonical dinucleotide splicing motifs (e.g. canonical: GT-AG, non-canonical: GG-AT).
 
-STAR has a number of parameters to control how splice junctions are called, using those parameters STAR produces a separate output of just splice junction calls (`SJ.out.tab`) which contains those splice junctions which STAR considers reasonable calls.  This is a subset of those splice junctions called in the BAM file itself.  To futher clarify this, if you were to use a tool like `regtools` to extract junctions from the BAM file that STAR produces you'll likely get an overlapping but distinct set of splice junction calls than the `SJ.out` file that STAR produces.
+STAR has a number of parameters (https://gensoft.pasteur.fr/docs/STAR/2.7.3a/STARmanual.pdf#subsection.14.16) to control how splice junctions are called in a separate output of just splice junction calls (`SJ.out.tab`), which STAR produces in addition to the BAM file.  This is a subset of those splice junctions called in the BAM file itself.  To futher clarify this, if you were to use a tool like `regtools` to extract junctions from the BAM file that STAR produces you'll likely get an overlapping but distinct set of splice junction calls than the `SJ.out` file that STAR produces.
 
 The following enumeration of relevant columns from STAR's `SJ.out.tab` file answers some questions around the splice junction counts used in recount3/Snaptron*:
 
