@@ -39,17 +39,16 @@ Fully unique bigwigs, those which only count primary alignments from those reads
 
 The STAR aligner calls splice junctions from reads which are align (split) across one or more potential splice junctions using both canonical and non-canonical dinucleotide splicing motifs (e.g. canonical: GT-AG, non-canonical: GG-AT).
 
-STAR has a number of parameters to control how splice junctions are called, using those parameters STAR produces a separate output of just splice junction calls (`SJ.out`) which contains those splice junctions which STAR considers reasonable calls.  This is a subset of those splice junctions called in the BAM file itself.  To futher clarify this, if you were to use a tool like `regtools` to extract junctions from the BAM file that STAR produces you'll likely get an overlapping but distinct set of splice junction calls than the `SJ.out` file that STAR produces.
+STAR has a number of parameters to control how splice junctions are called, using those parameters STAR produces a separate output of just splice junction calls (`SJ.out.tab`) which contains those splice junctions which STAR considers reasonable calls.  This is a subset of those splice junctions called in the BAM file itself.  To futher clarify this, if you were to use a tool like `regtools` to extract junctions from the BAM file that STAR produces you'll likely get an overlapping but distinct set of splice junction calls than the `SJ.out` file that STAR produces.
 
-The following enumeration of relevant columns from STAR's `SJ.out` file answers some questions around the splice junction counts used in recount3/Snaptron*:
+The following enumeration of relevant columns from STAR's `SJ.out.tab` file answers some questions around the splice junction counts used in recount3/Snaptron*:
 
-STAR's `SJ.out` format contains some noteworth columns (from http://gensoft.pasteur.fr/docs/STAR/2.7.3a/STARmanual.pdf section 4.4):
+STAR's `SJ.out.tab` format contains some noteworth columns (from http://gensoft.pasteur.fr/docs/STAR/2.7.3a/STARmanual.pdf section 4.4):
 
 * column 5: intron motif: 0: non-canonical; 1: GT/AG, 2: CT/AC, 3: GC/AG, 4: CT/GC, 5:AT/AC, 6: GT/AT
-* column 7: number of uniquely mapping reads crossing the junction [used by recount3/Snaptron as the splice junction read count]
-* column 8: number of multi-mapping reads crossing the junction [not used by recount3/Snaptron at all]
+* column 7: number of uniquely mapping reads crossing the junction
+* column 8: number of multi-mapping reads crossing the junction
 
-*Only applies to later Snaptron compilations based on Monorail/recount3 outputs, primarily these compilations: srav3h, srav1m, gtexv2, tcgav2
+Columns 7 and 8 are summed together to get the final coverage count for the splice junction for recount3/Snaptron*.
 
-
-
+*Only applies to later Snaptron compilations based on Monorail/recount3 outputs, primarily these compilations: `srav3h`, `srav1m`, `gtexv2`, `tcgav2`.
