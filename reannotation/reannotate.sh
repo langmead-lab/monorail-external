@@ -73,4 +73,5 @@ fi
 
 ## Final Aggregation into Single Gene and Exon Coverate Sum Matrices
 #TODO...
-echo "Now aggregate the gene and exon sums into two separate matrices (2 .tsv files)"
+echo "TODO: aggregate the gene and exon sums into two separate matrices (2 .tsv files)"
+echo "For now, please see the scripts under https://github.com/ChristopherWilks/megadepth/tree/master/sample_aggregation/ (especially paste_sums.sh) as a guide to how you might go about aggregating all the per-sample sums files into a single matrix TSV for genes and exons."
