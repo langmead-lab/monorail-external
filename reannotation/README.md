@@ -16,7 +16,7 @@ If you need to use a different binary (e.g. because you're on MacOS or ARM/aarch
 ```/bin/bash -x /path/to/monorail-external/reannotation/reannotate.sh /path/to/new_annotation.gtf <samples_already_processed_by_monorail.tsv>```
 
 `samples_already_processed_by_monorail.tsv` file should have the following format:
-No header, tab-delimited with two columns:
+no header and tab-delimited with two columns:
 * 1) sample_id used in Monorail
 * 2) path to sample's BigWig file for all reads (`.all.bw`) file output by monorail-pump (assumed to be already run)
 
