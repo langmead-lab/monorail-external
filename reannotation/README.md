@@ -3,6 +3,19 @@ One fairly major component that's been missing for a while with the Monorail pip
 
 This part of the repo attempts to at least partially address that.
 
+If you want to start with attempting to run the full set of steps (covered in individually below), run the the following in a directory you can write to and where you're fine outputting the updated sums per sample files to.  You will need to ensure the following dependency requirements are met:
+* Modern Linux OS on a x86_64 architecture (Intel/AMD, not ARM/aarch64)
+* GNU `parallel` installed and in the `$PATH`
+* `wget` installed and in the `$PATH`
+* `reasonably modern version of Python3 (e.g. >=3.7) installed and in the $PATH`
+
+This script will download the Megadepth binary for version 1.2.0 to the working directory and run it from there.
+
+If you need to use a different binary (e.g. because you're on MacOS or ARM/aarch64), please see https://github.com/ChristopherWilks/megadepth/releases/tag/1.2.0 and update the `reannotate.sh` script appropriately to point at a different Megadepth binary.
+
+```/bin/bash -x /path/to/repo_clone/reannotation/reannotate.sh /path/to/new_annotation.gtf <samples_already_processed_by_monorail.tsv>```
+
+
 ## New Annotation Preparation
 Whether you have a few additional genes or a whole new annotation (e.g. Gencode v45 human), the steps will be the same.
 
