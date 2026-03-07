@@ -7,7 +7,7 @@ If you want to start with attempting to run the full set of steps (covered in in
 * Modern Linux OS on a x86_64 architecture (Intel/AMD, not ARM/aarch64)
 * GNU `parallel` installed and in the `$PATH`
 * `wget` installed and in the `$PATH`
-* `reasonably modern version of Python3 (e.g. >=3.7) installed and in the $PATH`
+* reasonably modern version of Python3 (e.g. >=3.7) installed and in the $PATH
 
 This script will download the Megadepth binary for version 1.2.0 to the working directory and run it from there.
 
