@@ -1,4 +1,5 @@
 # monorail-external
+SPECIAL UPDATE: reAnnotation section added [HERE](https://github.com/langmead-lab/monorail-external/tree/master/reannotation) to help people either update their coverage sums using a new annotation or supplement the existing Monorail/recount3 sums with a new annotation (or specific set of genes/transcripts/exons).
 
 For a record of recent changes, please see the [CHANGELOG](https://github.com/langmead-lab/monorail-external/blob/master/CHANGELOG.md)
 
