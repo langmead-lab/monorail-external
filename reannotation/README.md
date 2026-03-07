@@ -13,7 +13,7 @@ This script will download the Megadepth binary for version 1.2.0 to the working 
 
 If you need to use a different binary (e.g. because you're on MacOS or ARM/aarch64), please see https://github.com/ChristopherWilks/megadepth/releases/tag/1.2.0 and update the `reannotate.sh` script appropriately to point at a different Megadepth binary.
 
-```/bin/bash -x /path/to/repo_clone/reannotation/reannotate.sh /path/to/new_annotation.gtf <samples_already_processed_by_monorail.tsv>```
+```/bin/bash -x /path/to/monorail-external/reannotation/reannotate.sh /path/to/new_annotation.gtf <samples_already_processed_by_monorail.tsv>```
 
 The rest of the subsections goes through each step in that script in detail and provides for running them individually.
 
