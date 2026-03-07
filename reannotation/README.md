@@ -15,6 +15,7 @@ If you need to use a different binary (e.g. because you're on MacOS or ARM/aarch
 
 ```/bin/bash -x /path/to/repo_clone/reannotation/reannotate.sh /path/to/new_annotation.gtf <samples_already_processed_by_monorail.tsv>```
 
+The rest of the subsections goes through each step in that script in detail and provides for running them individually.
 
 ## New Annotation Preparation
 Whether you have a few additional genes or a whole new annotation (e.g. Gencode v45 human), the steps will be the same.
@@ -63,3 +64,8 @@ Run this per-sample output from Megadepth:
 The output from the previous step has the correct sums and IDs but is still in a one-file-per-sample format.
 
 We need to get it into a single matrix (tab-delimited file with header, a `.tsv`) for the study/project/experiment (>=2 samples).
+
+TODO.....
+
+For now, please see the scripts under https://github.com/ChristopherWilks/megadepth/tree/master/sample_aggregation/ (especially `paste_sums.sh`)
+as a guide to how you might go about aggregating all the per-sample sums files into a single matrix TSV for genes and exons.
