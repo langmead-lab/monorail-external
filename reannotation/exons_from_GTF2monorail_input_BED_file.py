@@ -41,6 +41,7 @@ Usage
 
 import sys
 import re
+import gzip
 from collections import defaultdict
 
 
@@ -126,34 +127,38 @@ def gtf_to_bed(input_path, output_path):
     raw_exons = []
     skipped   = 0
 
-    with open(input_path) as fh:
-        for line_num, line in enumerate(fh, start=1):
-            if line.startswith("#"):
-                continue
-            fields = line.rstrip("\n").split("\t")
-            if len(fields) < 9:
-                skipped += 1
-                continue
-            if fields[2] != "exon":
-                continue
+    fh = None
+    if ".gz" in input_path:
+        fh = gzip.open(input_path)
+    else:
+        fh = open(input_path)
+    for line_num, line in enumerate(fh, start=1):
+        if line.startswith("#"):
+            continue
+        fields = line.rstrip("\n").split("\t")
+        if len(fields) < 9:
+            skipped += 1
+            continue
+        if fields[2] != "exon":
+            continue
 
-            gene_id = parse_attribute(fields[8], "gene_id")
-            exon_id = parse_attribute(fields[8], "exon_id")
-            if gene_id is None or exon_id is None:
-                print(f"  Warning: line {line_num} missing gene_id or exon_id — skipping.",
-                      file=sys.stderr)
-                skipped += 1
-                continue
+        gene_id = parse_attribute(fields[8], "gene_id")
+        exon_id = parse_attribute(fields[8], "exon_id")
+        if gene_id is None or exon_id is None:
+            print(f"  Warning: line {line_num} missing gene_id or exon_id — skipping.",
+                  file=sys.stderr)
+            skipped += 1
+            continue
 
-            raw_exons.append({
-                "chrom":   fields[0],
-                "start":   int(fields[3]),
-                "end":     int(fields[4]),
-                "strand":  fields[6],
-                "gene_id": gene_id,
-                "exon_id": exon_id,
-            })
-
+        raw_exons.append({
+            "chrom":   fields[0],
+            "start":   int(fields[3]),
+            "end":     int(fields[4]),
+            "strand":  fields[6],
+            "gene_id": gene_id,
+            "exon_id": exon_id,
+        })
+    fh.close()
     # ── Group by (chrom, gene_id) and compute overlap / segment info ─────────
     groups = defaultdict(list)
     for e in raw_exons:
